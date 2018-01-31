@@ -103,10 +103,10 @@
       </el-pagination>
     </div>
     <div class="alertGrounp">
-      <el-dialog title="设置审核状态" :append-to-body="true" :visible.sync="setStatus.show" width="600px">
-        <div class="cont">
+      <el-dialog title="设置审核状态" :append-to-body="true" :visible.sync="setStatus.show" width="600px" top="25vh">
+        <div class="cont" style="text-align:center;">
           <span>审核</span>
-          <el-select v-model="setStatus.status" placeholder="请选择">
+          <el-select v-model="setStatus.status" style="width:300px;margin-left:10px;" placeholder="请选择">
             <el-option label="未审核" value="0">
             </el-option>
             <el-option label="审核通过" value="1">
@@ -115,17 +115,63 @@
             </el-option>
           </el-select>
         </div>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="setStatus.show = false">取 消</el-button>
-          <el-button type="primary" @click="setStatus.show = false">确 定</el-button>
-        </span>
+        <div class="buttons" style="text-align:center;margin-top:40px;">
+          <span class="btn-b" style="margin-right:10px;" @click="setStatus.show = false">取消</span>
+          <span class="btn" @click="setStatus.show = false">确定</span>
+        </div>
       </el-dialog>
-      <el-dialog title="设置用户等级和价格" :append-to-body="true" :visible.sync="setPriceObj.show" width="600px">
-        <span>这是一段信息</span>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="setPriceObj.show = false">取 消</el-button>
-          <el-button type="primary" @click="setPriceObj.show = false">确 定</el-button>
-        </span>
+      <el-dialog title="设置用户等级和价格" :append-to-body="true" :visible.sync="setPriceObj.show" width="600px" top="25vh">
+        <div class="cont" style="text-align:center;">
+          <span style="display:inline-block;width:60px;text-align:right;">等级</span>
+          <el-select v-model="setPriceObj.status" style="width:300px;margin-left:10px;" placeholder="请选择">
+            <el-option label="未审核" value="0">
+            </el-option>
+            <el-option label="审核通过" value="1">
+            </el-option>
+            <el-option label="审核不通过" value="2">
+            </el-option>
+          </el-select>
+        </div>
+        <div class="cont" style="text-align:center;margin-top:20px;">
+          <span style="display:inline-block;width:60px;text-align:right;">圆通价格</span>
+          <el-input v-model="setPriceObj.price" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
+        </div>
+        <div class="cont" style="text-align:center;">
+          <span style="display:inline-block;width:60px;"></span>
+          <p style="font-size:12px;color:#ff3341;display:inline-block;width:300px;margin-left:10px;text-align:left;">皇冠以上可自定义价格</p>
+        </div>
+        <div class="buttons" style="text-align:center;margin-top:40px;">
+          <span class="btn-b" style="margin-right:10px;" @click="setPriceObj.show = false">取消</span>
+          <span class="btn" @click="setPriceObj.show = false">确定</span>
+        </div>
+      </el-dialog>
+      <el-dialog title="禁用用户" :append-to-body="true" :visible.sync="forbidObj.show" width="600px" top="25vh">
+        <div class="cont" style="text-align:center;">
+          <span style="font-size:18px;font-wight:bold;">你确定要禁用123456吗?</span>
+        </div>
+        <div class="buttons" style="text-align:center;margin-top:40px;">
+          <span class="btn-b" style="margin-right:10px;" @click="forbidObj.show = false">取消</span>
+          <span class="btn" @click="forbidObj.show = false">确定</span>
+        </div>
+      </el-dialog>
+      <el-dialog title="设置推荐人" :append-to-body="true" :visible.sync="setPushManObj.show" width="600px" top="25vh">
+        <div class="cont" style="text-align:center;">
+          <span style="display:inline-block;width:60px;text-align:right;">推荐人</span>
+          <el-input v-model="setPushManObj.pushMan" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
+        </div>
+        <div class="buttons" style="text-align:center;margin-top:40px;">
+          <span class="btn-b" style="margin-right:10px;" @click="setPushManObj.show = false">取消</span>
+          <span class="btn" @click="setPushManObj.show = false">确定</span>
+        </div>
+      </el-dialog>
+      <el-dialog title="重置密码" :append-to-body="true" :visible.sync="resetPassObj.show" width="600px" top="25vh">
+        <div class="cont" style="text-align:center;">
+          <span style="font-size:18px;font-wight:bold;">你确定要重置123456的密码吗?请谨慎操作</span>
+        </div>
+        <div class="buttons" style="text-align:center;margin-top:40px;">
+          <span class="btn-b" style="margin-right:10px;" @click="resetPassObj.show = false">取消</span>
+          <span class="btn" @click="resetPassObj.show = false">确定</span>
+        </div>
       </el-dialog>
     </div>
   </div>
@@ -184,6 +230,18 @@ export default {
         status: '0'
       },
       setPriceObj: {
+        show: false,
+        status: '0',
+        price: ''
+      },
+      forbidObj: {
+        show: false
+      },
+      setPushManObj: {
+        show: false,
+        pushMan: ''
+      },
+      resetPassObj: {
         show: false
       }
     }
@@ -205,13 +263,13 @@ export default {
           this.setPriceObj.show = true
           break
         case 2:
-
+          this.forbidObj.show = true
           break
         case 3:
-
+          this.setPushManObj.show = true
           break
         case 4:
-
+          this.resetPassObj.show = true
           break
         default:
           break
@@ -229,7 +287,7 @@ export default {
   ::-webkit-scrollbar
     display block
     width 100%
-    height 10px
+    height 8px
   ::-webkit-scrollbar-thumb
     background #eeeeee
     border-radius 5px
