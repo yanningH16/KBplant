@@ -3,7 +3,7 @@
     <div class="search">
       <div class="left">
         <span>渠道名称</span>
-        <el-input placeholder="输入渠道名称" style="width:180px;"></el-input>
+        <el-input v-model="channelName" placeholder="输入渠道名称" style="width:180px;"></el-input>
         <em class="btn">查询</em>
       </div>
       <div class="right">
@@ -72,7 +72,7 @@
         </div>
         <div class="cont" style="text-align:center;margin-bottom:20px;">
           <span style="display:inline-block;width:80px;text-align:right;">收款人</span>
-          <el-input v-model="editObj.payee" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
+          <el-input v-model="editObj.payer" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
         </div>
         <div class="cont" style="text-align:center;margin-bottom:20px;">
           <span style="display:inline-block;width:80px;text-align:right;">收款卡银行</span>
@@ -121,18 +121,22 @@
         </div>
         <div class="buttons" style="text-align:center;margin-top:40px;">
           <span class="btn-b" style="margin-right:10px;" @click="editObj.show = false">取消</span>
-          <span class="btn" @click="editObj.show = false">确定</span>
+          <span class="btn" @click="sureToPost">确定</span>
         </div>
       </el-dialog>
     </div>
   </div>
 </template>
 <script type="text/ecmascript-6">
+import { pageCommon } from '../../assets/js/mixin'
 export default {
   name: 'getwayManger',
+  mixins: [pageCommon],
   data () {
     return {
       currentPage: 1,
+      channelName: '',
+      apiUrl: '/api/channel/getPagingListByChannelName',
       rechargeObj: {
         show: false,
         money: '',
@@ -144,7 +148,7 @@ export default {
         type: 0,
         stationId: '',
         wayName: '',
-        payee: '',
+        payer: '',
         getBankName: '',
         otherBnakName: '',
         getBankAccount: '',
@@ -162,12 +166,18 @@ export default {
       }]
     }
   },
+  computed: {
+    params () {
+      return {
+        channelName: this.channelName,
+        pageNo: this.pageNo,
+        pageSize: this.pageSize
+      }
+    }
+  },
   methods: {
-    handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
-    },
-    handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
+    setList (data) {
+      this.tableData = data
     },
     handleClick (row) {
       console.log(row)
@@ -177,7 +187,66 @@ export default {
     },
     edit (type, row) {
       this.editObj.type = type
+      if (type === 0) {
+        this.editObj = {
+          show: this.editObj.show,
+          type: this.editObj.type,
+          stationId: row.stationId,
+          wayName: row.channelName,
+          payer: row.recipetName,
+          getBankName: row.recipetBankName,
+          otherBnakName: row.recipetBankName,
+          getBankAccount: row.recipetAccount,
+          kefuChat: row.serviceWechatNum,
+          kefuQQ: row.serviceQQ,
+          kefuPhone: row.servicePhone,
+          adminAccount: row.adminUserName,
+          adminPassword: row.adminPassword,
+          yuantongPrice: row.price
+        }
+      }
       this.editObj.show = true
+    },
+    // 点击确认按钮
+    sureToPost () {
+      if (this.editObj.type === 0) {
+
+      } else if (this.editObj.type === 1) {
+        this.$ajax.post('/api/channel/addChannel', {
+          channelName: this.editObj.wayName,
+          recipetContent: '',
+          recipetName: this.editObj.payer,
+          recipetAccount: this.editObj.getBankAccount,
+          recipetBankName: this.editObj.getBankName,
+          serviceQQ: this.editObj.kefuQQ,
+          serviceWechatNum: this.editObj.kefuChat,
+          servicePhone: this.editObj.kefuPhone,
+          adminUserName: this.editObj.adminAccount,
+          adminPassword: this.editObj.adminPassword,
+          price: this.editObj.yuantongPrice
+        }).then((data) => {
+          if (data.data.code === '200') {
+            this.editObj.show = false
+            this.$message({
+              message: '添加成功!',
+              type: 'success'
+            })
+            this.getList()
+            for (let m of this.editObj) {
+              if (!(m === 'show' || m === 'type')) {
+                m = ''
+              }
+            }
+          } else {
+            this.$message({
+              message: data.data.message,
+              type: 'warning'
+            })
+          }
+        }).catch((err) => {
+          console.error(err)
+        })
+      }
     }
   }
 }
