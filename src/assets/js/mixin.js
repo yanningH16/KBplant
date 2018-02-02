@@ -47,7 +47,10 @@ export const pageCommon = {
           let myDatas = mydata.data.waitingSendSMSList || mydata.data.data || mydata.data.datas || mydata.data.userAccountDOList || mydata.data.buyers || mydata.data || mydata.data.chargeApplys
           this.setList(myDatas)
         } else {
-          this.$message.error(mydata.message)
+          this.$message({
+            message: mydata.message,
+            type: 'warning'
+          })
         }
       }).catch((error) => {
         console.log(error)

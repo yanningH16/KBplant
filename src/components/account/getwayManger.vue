@@ -191,7 +191,7 @@ export default {
         this.editObj = {
           show: this.editObj.show,
           type: this.editObj.type,
-          stationId: row.stationId,
+          stationId: row.channelId,
           wayName: row.channelName,
           payer: row.recipetName,
           getBankName: row.recipetBankName,
@@ -209,44 +209,47 @@ export default {
     },
     // 点击确认按钮
     sureToPost () {
+      let url = ''
       if (this.editObj.type === 0) {
-
+        url = '/channel/updateChannelInfo'
       } else if (this.editObj.type === 1) {
-        this.$ajax.post('/api/channel/addChannel', {
-          channelName: this.editObj.wayName,
-          recipetContent: '',
-          recipetName: this.editObj.payer,
-          recipetAccount: this.editObj.getBankAccount,
-          recipetBankName: this.editObj.getBankName,
-          serviceQQ: this.editObj.kefuQQ,
-          serviceWechatNum: this.editObj.kefuChat,
-          servicePhone: this.editObj.kefuPhone,
-          adminUserName: this.editObj.adminAccount,
-          adminPassword: this.editObj.adminPassword,
-          price: this.editObj.yuantongPrice
-        }).then((data) => {
-          if (data.data.code === '200') {
-            this.editObj.show = false
-            this.$message({
-              message: '添加成功!',
-              type: 'success'
-            })
-            this.getList()
-            for (let m of this.editObj) {
-              if (!(m === 'show' || m === 'type')) {
-                m = ''
-              }
-            }
-          } else {
-            this.$message({
-              message: data.data.message,
-              type: 'warning'
-            })
-          }
-        }).catch((err) => {
-          console.error(err)
-        })
+        url = '/api/channel/addChannel'
       }
+      this.$ajax.post(url, {
+        channelId: this.editObj.channelId || '',
+        channelName: this.editObj.wayName,
+        recipetContent: '',
+        recipetName: this.editObj.payer,
+        recipetAccount: this.editObj.getBankAccount,
+        recipetBankName: this.editObj.getBankName,
+        serviceQQ: this.editObj.kefuQQ,
+        serviceWechatNum: this.editObj.kefuChat,
+        servicePhone: this.editObj.kefuPhone,
+        adminUserName: this.editObj.adminAccount,
+        adminPassword: this.editObj.adminPassword,
+        price: this.editObj.yuantongPrice
+      }).then((data) => {
+        if (data.data.code === '200') {
+          this.editObj.show = false
+          this.$message({
+            message: '操作成功!',
+            type: 'success'
+          })
+          this.getList()
+          for (let m of this.editObj) {
+            if (!(m === 'show' || m === 'type')) {
+              m = ''
+            }
+          }
+        } else {
+          this.$message({
+            message: data.data.message,
+            type: 'warning'
+          })
+        }
+      }).catch((err) => {
+        console.error(err)
+      })
     }
   }
 }

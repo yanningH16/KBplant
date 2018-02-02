@@ -9,7 +9,7 @@
         <div class="inputCont" @keyup.13="login">
           <div class="input">
             <span class="el-icon-edit"></span>
-            <input type="number" placeholder="输入手机号" v-model="username">
+            <input type="text" placeholder="输入用户名" v-model="username">
           </div>
           <div class="input">
             <span class="el-icon-edit-outline"></span>
@@ -37,10 +37,21 @@ export default {
   data () {
     return {
       username: '',
-      password: ''
+      password: '',
+      ip: ''
     }
   },
   methods: {
+    getIp () {
+      this.$ajax.get('/ipApi'
+      ).then((data) => {
+        if (data.status === 200 || data.statusText === 'OK') {
+          this.ip = data.data.ip
+        }
+      }).catch((err) => {
+        console.error(err)
+      })
+    },
     login () {
       if (this.username === '' || this.password === '') {
         this.$message({
@@ -56,11 +67,12 @@ export default {
         return false
       } else {
         // 登录
-        this.$ajax.post('/api/sellerAccout/login', {
-          telephone: this.username,
-          password: md5(this.password)
+        this.$ajax.post('/api/platform/login', {
+          userName: this.username,
+          password: md5(this.password),
+          ip: this.ip
         }).then((data) => {
-          // console.log(data)
+          console.log(data)
           if (data.data.code === '200') {
             this.setUserInfo(data.data.data)
             this.setUserToken(data.headers.accesstoken)
@@ -68,7 +80,7 @@ export default {
               message: '登录成功,页面跳转中...',
               type: 'success',
               onClose: () => {
-                this.$router.push({ name: 'overView' })
+                this.$router.push({ name: 'home' })
               }
             })
           } else {
@@ -87,6 +99,9 @@ export default {
       'setUserInfo',
       'setUserToken'
     ])
+  },
+  mounted () {
+    this.getIp()
   }
 }
 </script>

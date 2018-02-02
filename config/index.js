@@ -19,6 +19,13 @@ module.exports = {
           '^/api': ''
         }
       },
+      '/ipApi': { // 获取ip地址
+        target: 'http://freegeoip.net/json/',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/ipApi': ''
+        }
+      }
     },
 
     // Various Dev Server settings
