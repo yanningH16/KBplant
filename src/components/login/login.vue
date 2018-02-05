@@ -72,7 +72,6 @@ export default {
           password: md5(this.password),
           ip: this.ip
         }).then((data) => {
-          console.log(data)
           if (data.data.code === '200') {
             this.setUserInfo(data.data.data)
             this.setUserToken(data.headers.accesstoken)
@@ -80,7 +79,7 @@ export default {
               message: '登录成功,页面跳转中...',
               type: 'success',
               onClose: () => {
-                this.$router.push({ name: 'home' })
+                this.$router.push({ path: '/home' })
               }
             })
           } else {

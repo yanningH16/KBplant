@@ -4,7 +4,7 @@
       <ul class="left">
         <li>
           <span>付款方式</span>
-          <el-select v-model="payWay" style="width:180px;margin-right:20px;" placeholder="请选择">
+          <el-select v-model="payType" style="width:180px;margin-right:20px;" placeholder="请选择">
             <el-option label="全部" value="">
             </el-option>
             <el-option label="支付宝转账" value="1">
@@ -15,7 +15,7 @@
         </li>
         <li>
           <span>充值状态</span>
-          <el-select v-model="payStatus" style="width:180px;margin-right:20px;" placeholder="请选择">
+          <el-select v-model="rechargeStatus" style="width:180px;margin-right:20px;" placeholder="请选择">
             <el-option label="全部" value="">
             </el-option>
             <el-option label="等待付款" value="1">
@@ -26,10 +26,10 @@
         </li>
         <li>
           <span>站点ID</span>
-          <el-input v-model="stationId" style="width:180px;margin-right:20px;" placeholder="请输入内容"></el-input>
+          <el-input v-model="channelId" style="width:180px;margin-right:20px;" placeholder="请输入内容"></el-input>
         </li>
         <li style="text-align:left;">
-          <span class="btn" style="text-align:center;">查询</span>
+          <span class="btn" @click="getList" style="text-align:center;">查询</span>
         </li>
       </ul>
     </div>
@@ -66,28 +66,40 @@
       </el-table>
     </div>
     <div class="pager">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[100, 200, 300, 400]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="400">
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSizeArray" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pageTotal">
       </el-pagination>
     </div>
   </div>
 </template>
 <script type="text/ecmascript-6">
+import { pageCommon } from '../../assets/js/mixin'
 export default {
   name: 'getwayRechargeList',
+  mixins: [pageCommon],
   data () {
     return {
+      apiUrl: '/api/channel/recharge/getRechargeListForPlatform',
+      payType: '',
+      rechargeStatus: '',
+      channelId: '',
       currentPage: 1,
-      userList: [{
-        plusLev: 'gsagasgas'
-      }]
+      userList: []
+    }
+  },
+  computed: {
+    params () {
+      return {
+        payType: this.payType,
+        rechargeStatus: this.rechargeStatus,
+        channelId: this.channelId,
+        pageNo: this.pageNo,
+        pageSize: this.pageSize
+      }
     }
   },
   methods: {
-    handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
-    },
-    handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
+    setList (data) {
+      this.userList = data
     },
     handleClick (row, type) {
       console.log(row, type)

@@ -25,6 +25,7 @@
         <b class="head">
           Y
         </b>
+        <span>{{ userInfo.telephone }}</span>
         <a class="el-icon-arrow-down"></a>
         <transition :name="showInfo ? 'el-fade-in-linear' : 'el-fade-in'">
           <ul class="operate" :class="{ 'fadeIn': showInfo, 'fadeOut': !showInfo }" v-show="showInfo">
