@@ -45,17 +45,26 @@
         </el-table-column>
         <el-table-column prop="substationName" label="站点名称" align="center">
         </el-table-column>
-        <el-table-column prop="id" label="充值编号" align="center">
+        <el-table-column prop="rechargeId" label="充值编号" align="center">
         </el-table-column>
         <el-table-column prop="rechargeId" label="交易号" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.aaa ? scope.row.aaa : '--' }}</span>
+          </template>
         </el-table-column>
         <el-table-column prop="payTypeDetail" label="付款方式" align="center">
         </el-table-column>
         <el-table-column prop="money" label="充值金额" align="center">
         </el-table-column>
         <el-table-column prop="address" label="充值前金额" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.beforMoney ? scope.row.beforMoney : '--' }}</span>
+          </template>
         </el-table-column>
         <el-table-column prop="address" label="充值后金额" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.afterMoney ? scope.row.afterMoney : '--' }}</span>
+          </template>
         </el-table-column>
         <el-table-column prop="stautsDetail" label="充值状态" align="center">
         </el-table-column>

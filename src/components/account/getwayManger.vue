@@ -87,7 +87,7 @@
       <el-dialog :title="editObj.type==0 ? '渠道编辑' : '添加渠道'" :append-to-body="true" :visible.sync="editObj.show" width="600px" top="5vh">
         <div v-if="editObj.type==0" class="cont" style="text-align:center;margin-bottom:20px;">
           <span style="display:inline-block;width:80px;text-align:right;">站点编码</span>
-          <el-input v-model="editObj.stationId" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
+          <el-input v-model="editObj.stationId" :disabled="editObj.type==0" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
         </div>
         <div class="cont" style="text-align:center;margin-bottom:20px;">
           <span style="display:inline-block;width:80px;text-align:right;">渠道名称</span>
@@ -128,9 +128,9 @@
         </div>
         <div class="cont" style="text-align:center;margin-bottom:20px;">
           <span style="display:inline-block;width:80px;text-align:right;">管理员帐号</span>
-          <el-input v-model="editObj.adminAccount" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
+          <el-input v-model="editObj.adminAccount" :disabled="editObj.type==0" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
         </div>
-        <div class="cont" style="text-align:center;margin-bottom:20px;">
+        <div class="cont" v-if="editObj.type==1" style="text-align:center;margin-bottom:20px;">
           <span style="display:inline-block;width:80px;text-align:right;">管理员密码</span>
           <el-input v-model="editObj.adminPassword" type="password" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
         </div>
@@ -325,7 +325,7 @@ export default {
         serviceWechatNum: this.editObj.kefuChat,
         servicePhone: this.editObj.kefuPhone,
         adminUserName: this.editObj.adminAccount,
-        adminPassword: md5(this.editObj.adminPassword),
+        adminPassword: this.editObj.adminPassword ? md5(this.editObj.adminPassword) : '',
         price: this.editObj.yuantongPrice
       }).then((data) => {
         if (data.data.code === '200') {

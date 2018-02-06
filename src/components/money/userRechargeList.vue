@@ -54,9 +54,12 @@
         </el-table-column>
         <el-table-column prop="substationId" label="站点ID" align="center" width="185">
         </el-table-column>
-        <el-table-column prop="id" label="充值编号" align="center" width="100">
+        <el-table-column prop="rechargeId" label="充值编号" align="center" width="185">
         </el-table-column>
-        <el-table-column prop="rechargeId" label="交易号" align="center" width="185">
+        <el-table-column prop="rechargeId" label="交易号" align="center" width="120">
+          <template slot-scope="scope">
+            <span>{{ scope.row.aaa ? scope.row.aaa : '--' }}</span>
+          </template>
         </el-table-column>
         <el-table-column prop="receiptCardNo" label="收款帐号" align="center" width="200">
           <template slot-scope="scope">
@@ -75,10 +78,14 @@
         <el-table-column prop="money" label="充值金额" align="center" width="120">
         </el-table-column>
         <el-table-column prop="plusLev" label="充值前金额" align="center" width="120">
+          <template slot-scope="scope">
+            <span>{{ scope.row.beforMoney ? scope.row.beforMoney : '--' }}</span>
+          </template>
         </el-table-column>
         <el-table-column prop="plusLev" label="充值后金额" align="center" width="120">
-        </el-table-column>
-        <el-table-column prop="plusLev" label="最后登录时间" align="center" width="120">
+          <template slot-scope="scope">
+            <span>{{ scope.row.afterMoney ? scope.row.afterMoney : '--' }}</span>
+          </template>
         </el-table-column>
         <el-table-column prop="comment" label="备注" align="center" width="120">
         </el-table-column>

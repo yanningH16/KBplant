@@ -106,6 +106,8 @@
         </el-table-column>
         <el-table-column prop="checkStatusDetail" label="审核状态" align="center" width="120">
         </el-table-column>
+        <el-table-column prop="statusDetail" label="用户状态" align="center" width="120">
+        </el-table-column>
         <el-table-column prop="lastLoginTime" label="最后登录时间" align="center" width="200">
           <template slot-scope="scope">
             <span>{{ scope.row.lastLoginTime ? scope.row.lastLoginTime : '--' }}</span>
