@@ -11,8 +11,8 @@
         </el-option>
         <el-option label="差价" value="2">
         </el-option>
-        <el-option label="无" value="3">
-        </el-option>
+        <!-- <el-option label="无" value="3">
+        </el-option> -->
       </el-select>
       <span>推荐人</span>
       <el-input v-model="condition" placeholder="请输入推荐人" style="width:180px;margin-right:10px;"></el-input>
