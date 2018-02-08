@@ -1,10 +1,12 @@
 <template>
-  <div class="plantformList">
+  <div class="getwayList">
     <div class="search">
       <div class="left">
         <span>日期查询</span>
         <el-date-picker v-model="time" value-format="yyyy-MM-dd" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" style="width:350px;margin-right:10px;">
         </el-date-picker>
+        <span>渠道ID</span>
+        <el-input v-model="channelId" style="width:180px;" placeholder="请输入内容"></el-input>
         <em @click="getList" class="btn">查询</em>
       </div>
     </div>
@@ -12,9 +14,13 @@
       <el-table :data="userList" style="width: 100%">
         <el-table-column fixed="left" prop="gmtCreate" label="日期" align="center" width="185">
         </el-table-column>
-        <el-table-column prop="taskNum" label="任务数" align="center" width="100">
+        <el-table-column prop="channelId" label="渠道ID" align="center" width="185">
         </el-table-column>
-        <el-table-column prop="orderNum" label="订单数" align="center" width="100">
+        <el-table-column prop="channelName" label="渠道名称" align="center" width="120">
+        </el-table-column>
+        <el-table-column prop="taskNum" label="任务数" align="center" width="120">
+        </el-table-column>
+        <el-table-column prop="orderNum" label="订单数" align="center" width="120">
         </el-table-column>
         <el-table-column prop="makeOrderUserNum" label="下单用户数" align="center" width="120">
         </el-table-column>
@@ -28,14 +34,14 @@
         </el-table-column>
         <el-table-column prop="rechargeSum" label="充值金额" align="center" width="120">
         </el-table-column>
-        <el-table-column fixed="right" label="平台利润" align="center" width="120">
+        <el-table-column fixed="right" label="渠道利润" align="center" width="120">
           <template slot-scope="scope">
             <el-button type="text" size="small">{{ scope.row.profit }}</el-button>
           </template>
         </el-table-column>
         <el-table-column prop="sellerAccountMoney" label="用户帐户余额" align="center" width="120">
         </el-table-column>
-        <el-table-column prop="sellerCost" label="用户消费金额" align="center" width="120">
+        <el-table-column prop="sellerCost" label="用户消费余额" align="center" width="120">
         </el-table-column>
       </el-table>
     </div>
@@ -48,12 +54,13 @@
 <script type="text/ecmascript-6">
 import { pageCommon } from '../../assets/js/mixin'
 export default {
-  name: 'plantformList',
+  name: 'getwayList',
   mixins: [pageCommon],
   data () {
     return {
       searchTime: '',
-      apiUrl: '/api/statistics/search/getPlatformStatisticsByCondition',
+      apiUrl: '/api/statistics/search/getChannelStatisticsByCondition',
+      channelId: '',
       time: '',
       currentPage: 1,
       userList: []
@@ -64,6 +71,7 @@ export default {
       return {
         startTime: this.time[0],
         endTime: this.time[1],
+        channelId: this.channelId,
         currPageNo: this.pageNo,
         limit: this.pageSize
       }
@@ -77,7 +85,7 @@ export default {
 }
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
-.plantformList
+.getwayList
   margin 20px
   padding 20px
   background #ffffff

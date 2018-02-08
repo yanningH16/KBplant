@@ -168,7 +168,7 @@
             </el-option>
           </el-select>
         </div>
-        <div class="cont" style="text-align:center;margin-top:20px;">
+        <div v-if="setPriceObj.status<=4" class="cont" style="text-align:center;margin-top:20px;">
           <span style="display:inline-block;width:60px;text-align:right;">圆通价格</span>
           <el-input v-model="setPriceObj.price" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
         </div>

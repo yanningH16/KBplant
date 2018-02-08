@@ -105,22 +105,26 @@ export default {
                 router: 'plantformList'
               },
               {
+                header: '渠道报表统计',
+                router: 'getwayList'
+              },
+              {
                 header: '站点报表统计',
                 router: 'stationList'
               }
             ]
-          },
-          {
-            icon: 'icon-duanxinchaxun',
-            header: '其他管理',
-            router: 'other',
-            children: [
-              {
-                header: '发布公告',
-                router: 'notice'
-              }
-            ]
           }
+          // {
+          //   icon: 'icon-duanxinchaxun',
+          //   header: '其他管理',
+          //   router: 'other',
+          //   children: [
+          //     {
+          //       header: '发布公告',
+          //       router: 'notice'
+          //     }
+          //   ]
+          // }
         ]
       },
       set (val) {

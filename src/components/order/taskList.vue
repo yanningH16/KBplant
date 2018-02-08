@@ -4,7 +4,7 @@
       <ul class="left">
         <li>
           <span>物流平台</span>
-          <el-select v-model="platform" style="width:180px;margin-right:20px;" placeholder="请选择">
+          <el-select v-model="logisticsType" style="width:180px;margin-right:20px;" placeholder="请选择">
             <el-option label="全部" value="">
             </el-option>
             <el-option label="圆通" value="1">
@@ -12,13 +12,15 @@
           </el-select>
         </li>
         <li>
-          <span>是否付款</span>
-          <el-select v-model="payStatus" style="width:180px;margin-right:20px;" placeholder="请选择">
+          <span>付款状态</span>
+          <el-select v-model="status" style="width:180px;margin-right:20px;" placeholder="请选择">
             <el-option label="全部" value="">
             </el-option>
-            <el-option label="未付款" value="0">
+            <el-option label="未支付" value="0">
             </el-option>
-            <el-option label="已付款" value="1">
+            <el-option label="支付成功" value="1">
+            </el-option>
+            <el-option label="任务删除" value="2">
             </el-option>
           </el-select>
         </li>
@@ -27,16 +29,16 @@
           <el-input v-model="userName" style="width:180px;margin-right:20px;" placeholder="请输入内容"></el-input>
         </li>
         <li>
-          <span>任务批号</span>
-          <el-input v-model="taskId" style="width:180px;margin-right:20px;" placeholder="请输入内容"></el-input>
+          <span>任务ID</span>
+          <el-input v-model="sellerTaskId" style="width:180px;margin-right:20px;" placeholder="请输入内容"></el-input>
         </li>
-        <li>
+        <li style="width:auto;">
           <span>提交日期</span>
-          <el-date-picker v-model="submitTime" type="date" style="width:180px;margin-right:20px;" placeholder="选择日期">
+          <el-date-picker v-model="time" value-format="yyyy-MM-dd" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" style="width:350px;margin-right:20px;">
           </el-date-picker>
         </li>
         <li style="text-align:left;">
-          <span class="btn" style="text-align:center;">查询</span>
+          <span @click="getList" class="btn" style="text-align:center;">查询</span>
         </li>
         <!-- <li style="text-align:right;flex:1;">
           <span @click="sendOrderObj.show=true" class="btn-b" style="text-align:center;">提交订单</span>
@@ -45,24 +47,24 @@
     </div>
     <div class="table">
       <el-table :data="tableData" style="width: 100%">
-        <el-table-column prop="address" label="提交日期" align="center">
+        <el-table-column prop="gmtCreate" label="提交日期" align="center">
         </el-table-column>
-        <el-table-column prop="address" label="站点ID" align="center">
+        <el-table-column prop="substationId" label="站点ID" align="center">
         </el-table-column>
-        <el-table-column prop="address" label="用户名" align="center">
+        <el-table-column prop="userName" label="用户名" align="center">
         </el-table-column>
-        <el-table-column prop="address" label="任务批号" align="center">
+        <el-table-column prop="sellerTaskId" label="任务ID" align="center">
         </el-table-column>
-        <el-table-column prop="address" label="快递公司" align="center">
+        <el-table-column prop="logisticsType" label="快递公司" align="center">
           <template slot-scope="scope">
-            <span>{{ 123456 }}</span>
+            <span>{{ scope.row.logisticsType == 1 ? '圆通' : '--' }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="订单数" align="center">
+        <el-table-column prop="totalNum" label="订单数" align="center">
         </el-table-column>
-        <el-table-column prop="address" label="单价" align="center">
+        <el-table-column prop="price" label="单价" align="center">
         </el-table-column>
-        <el-table-column prop="address" label="订单总价" align="center">
+        <el-table-column prop="actualCost" label="订单总价" align="center">
         </el-table-column>
         <!-- <el-table-column prop="address" label="导入结果" align="center" width="200">
           <template slot-scope="scope">
@@ -73,16 +75,17 @@
             </p>
           </template>
         </el-table-column> -->
-        <el-table-column prop="address" label="付款状态" align="center">
+        <el-table-column prop="status" label="付款状态" align="center">
           <template slot-scope="scope">
-            <span style="font-size:12px;" v-if="0">未付款</span>
-            <span style="font-size:12px;" class="green">已付款</span>
+            <span style="font-size:12px;" v-if="scope.row.status==0">未支付</span>
+            <span style="font-size:12px;" v-if="scope.row.status==1" class="green">支付成功</span>
+            <span style="font-size:12px;" v-if="scope.row.status==2">任务删除</span>
           </template>
         </el-table-column>
       </el-table>
     </div>
     <div class="pager">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[100, 200, 300, 400]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="400">
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSizeArray" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pageTotal">
       </el-pagination>
     </div>
     <div class="alertGrounp">
@@ -100,26 +103,45 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
+import { pageCommon } from '../../assets/js/mixin'
 export default {
   name: 'taskList',
+  mixins: [pageCommon],
   data () {
     return {
       currentPage: 1,
+      apiUrl: '/api/order/search/getSellerTaskByCondition',
+      time: '',
+      status: '',
+      userName: '',
+      logisticsType: '',
+      sellerTaskId: '',
       sendOrderObj: {
         show: false,
         orderNumId: ''
       },
-      tableData: [{
-        address: 'fgsaasggas'
-      }]
+      tableData: []
+    }
+  },
+  computed: {
+    params () {
+      return {
+        currPageNo: this.pageNo,
+        limit: this.pageSize,
+        endTime: this.time[1],
+        startTime: this.time[0],
+        logisticsType: this.logisticsType,
+        // sellerShopId: ,
+        sellerTaskId: this.sellerTaskId,
+        status: this.status,
+        // substationId: ,
+        userName: this.userName
+      }
     }
   },
   methods: {
-    handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
-    },
-    handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
+    setList (data) {
+      this.tableData = data
     }
   }
 }

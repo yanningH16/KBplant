@@ -3,75 +3,83 @@
     <div class="search">
       <div class="left">
         <span>日期查询</span>
-        <el-date-picker v-model="searchTime" type="date" style="width:180px;margin-right:20px;" placeholder="选择日期">
+        <el-date-picker v-model="time" value-format="yyyy-MM-dd" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" style="width:350px;margin-right:10px;">
         </el-date-picker>
         <span>站点ID</span>
-        <el-input v-model="stationId" style="width:180px;" placeholder="请输入内容"></el-input>
-        <em class="btn">查询</em>
+        <el-input v-model="substationId" style="width:180px;" placeholder="请输入内容"></el-input>
+        <em @click="getList" class="btn">查询</em>
       </div>
     </div>
     <div class="table">
       <el-table :data="userList" style="width: 100%">
-        <el-table-column fixed="left" prop="userName" label="日期" align="center" width="100">
+        <el-table-column fixed="left" prop="gmtCreate" label="日期" align="center" width="185">
         </el-table-column>
-        <el-table-column prop="userName" label="站点ID" align="center" width="200">
+        <el-table-column prop="substationId" label="站点ID" align="center" width="185">
         </el-table-column>
-        <el-table-column prop="userName" label="站点" align="center" width="120">
+        <el-table-column prop="substationName" label="站点名称" align="center" width="120">
         </el-table-column>
-        <el-table-column prop="userName" label="任务数" align="center" width="120">
+        <el-table-column prop="taskNum" label="任务数" align="center" width="120">
         </el-table-column>
-        <el-table-column prop="userName" label="订单数" align="center" width="120">
+        <el-table-column prop="orderNum" label="订单数" align="center" width="120">
         </el-table-column>
-        <el-table-column prop="userName" label="下单用户数" align="center" width="120">
+        <el-table-column prop="makeOrderUserNum" label="下单用户数" align="center" width="120">
         </el-table-column>
-        <el-table-column prop="userName" label="新用户首次充值" align="center" width="120">
+        <el-table-column prop="newRegisterNum" label="新注册用户数" align="center" width="120">
         </el-table-column>
-        <el-table-column prop="userName" label="新用户充值金额" align="center" width="120">
+        <el-table-column prop="newRechargeSum" label="新用户首次充值" align="center" width="120">
         </el-table-column>
-        <el-table-column prop="userName" label="充值笔数" align="center" width="120">
+        <el-table-column prop="newRechargeNum" label="新用户充值金额" align="center" width="120">
         </el-table-column>
-        <el-table-column prop="userName" label="充值金额" align="center" width="120">
+        <el-table-column prop="rechargeNum" label="充值笔数" align="center" width="120">
         </el-table-column>
-        <el-table-column fixed="right" label="总站利润" align="center" width="120">
+        <el-table-column prop="rechargeSum" label="充值金额" align="center" width="120">
+        </el-table-column>
+        <el-table-column fixed="right" label="分站利润" align="center" width="120">
           <template slot-scope="scope">
-            <el-button type="text" size="small">122.33</el-button>
+            <el-button type="text" size="small">{{ scope.row.profit }}</el-button>
           </template>
         </el-table-column>
-        <el-table-column prop="userName" label="用户帐户余额" align="center" width="120">
+        <el-table-column prop="sellerAccountMoney" label="用户帐户余额" align="center" width="120">
         </el-table-column>
-        <el-table-column prop="userName" label="用户消费余额" align="center" width="120">
-        </el-table-column>
-        <el-table-column prop="userName" label="站点利润" align="center" width="120">
-        </el-table-column>
-        <el-table-column prop="userName" label="渠道利润" align="center" width="120">
+        <el-table-column prop="sellerCost" label="用户消费余额" align="center" width="120">
         </el-table-column>
       </el-table>
     </div>
     <div class="pager">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[100, 200, 300, 400]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="400">
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSizeArray" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pageTotal">
       </el-pagination>
     </div>
   </div>
 </template>
 <script type="text/ecmascript-6">
+import { pageCommon } from '../../assets/js/mixin'
 export default {
   name: 'stationList',
+  mixins: [pageCommon],
   data () {
     return {
       searchTime: '',
-      stationId: '',
+      apiUrl: '/api/statistics/search/getSubstationStatisticsByCondition',
+      substationId: '',
+      time: '',
       currentPage: 1,
-      userList: [{
-        userName: 'nfasnffsafn'
-      }]
+      userList: []
+    }
+  },
+  computed: {
+    params () {
+      return {
+        startTime: this.time[0],
+        endTime: this.time[1],
+        currPageNo: this.pageNo,
+        limit: this.pageSize,
+        substationId: this.substationId
+      }
     }
   },
   methods: {
-    handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
-    },
-    handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
+    setList (data) {
+      this.userList = data
     }
   }
 }

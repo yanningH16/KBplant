@@ -4,84 +4,93 @@
       <ul class="left">
         <li>
           <span>物流平台</span>
-          <el-select v-model="platform" style="width:170px;margin-right:20px;" placeholder="请选择">
+          <el-select v-model="logisticsType" style="width:170px;margin-right:20px;" placeholder="请选择">
             <el-option label="全部" value="">
             </el-option>
-            <el-option label="圆通" value="">
+            <el-option label="圆通" value="1">
             </el-option>
           </el-select>
         </li>
         <li>
           <span>电商平台</span>
-          <el-select v-model="shopPlatform" style="width:170px;margin-right:20px;" placeholder="请选择">
+          <el-select v-model="shopType" style="width:170px;margin-right:20px;" placeholder="请选择">
             <el-option label="全部" value="">
-            </el-option>
-            <el-option label="京东" value="0">
             </el-option>
             <el-option label="淘宝" value="1">
             </el-option>
             <el-option label="天猫" value="2">
             </el-option>
-            <el-option label="拼多多" value="3">
+            <el-option label="京东" value="3">
+            </el-option>
+            <el-option label="拼多多" value="4">
             </el-option>
           </el-select>
         </li>
         <li>
-          <span>是否付款</span>
-          <el-select v-model="isPay" style="width:170px;margin-right:20px;" placeholder="请选择">
+          <span>付款状态</span>
+          <el-select v-model="payStatus" style="width:170px;margin-right:20px;" placeholder="请选择">
             <el-option label="全部" value="">
             </el-option>
-            <el-option label="否" value="0">
+            <el-option label="未支付" value="0">
             </el-option>
-            <el-option label="是" value="1">
+            <el-option label="支付成功" value="1">
+            </el-option>
+            <el-option label="任务删除" value="2">
             </el-option>
           </el-select>
         </li>
         <li>
           <span>快递单号</span>
-          <el-input v-model="postOrderNum" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
+          <el-input v-model="logisticsOrderId" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
         </li>
         <li>
           <span>站点ID</span>
-          <el-input v-model="stationId" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
+          <el-input v-model="substationId" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
         </li>
         <li>
           <span>任务ID</span>
-          <el-input v-model="taskId" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
+          <el-input v-model="sellerTaskId" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
         </li>
         <li>
           <span>订单号</span>
-          <el-input v-model="orderNum" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
+          <el-input v-model="sellerOrderId" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
         </li>
         <li>
           <span>用户名</span>
-          <el-input v-model="userName" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
+          <el-input v-model="sellerUserName" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
         </li>
         <li>
           <span>发件手机</span>
-          <el-input v-model="sendPhone" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
+          <el-input v-model="senderTelephone" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
         </li>
         <li>
           <span>收件手机</span>
-          <el-input v-model="getPhone" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
+          <el-input v-model="receiveTelephone" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
         </li>
         <li>
           <span>快递单状态</span>
-          <el-select v-model="postStatus" style="width:170px;margin-right:20px;" placeholder="请选择">
+          <el-select v-model="orderStatus" style="width:170px;margin-right:20px;" placeholder="请选择">
             <el-option label="全部" value="">
+            </el-option>
+            <el-option label="未获取运单" value="0">
+            </el-option>
+            <el-option label="已获取运单" value="1">
+            </el-option>
+            <el-option label="订单取消" value="2">
             </el-option>
           </el-select>
         </li>
-        <li>
+        <li style="width:auto;margin-left:15px;">
           <span>发布日期</span>
-          <el-date-picker v-model="sendOrderTime" type="date" style="width:170px;margin-right:20px;" placeholder="选择日期">
+          <el-date-picker v-model="postObj.time" value-format="yyyy-MM-dd" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" style="width:350px;margin-right:20px;">
           </el-date-picker>
         </li>
         <li style="text-align:left;">
-          <span class="btn" style="text-align:center;">查询</span>
+          <span @click="getList" class="btn" style="text-align:center;">查询</span>
         </li>
         <li style="flex:1;text-align:right;">
-          <span @click="getOrderListObj.show=true" class="btn-b" style="text-align:center;">导出订单</span>
+          <span @click="sureToReget" class="btn-b" style="text-align:center;margin-right:20px;">重新获取</span>
+          <span @click="sureToLinkOrder" class="btn-b" style="text-align:center;">导出订单</span>
         </li>
       </ul>
     </div>
@@ -89,61 +98,77 @@
       <el-table :data="userList" @selection-change="handleSelectionChange" style="width: 100%">
         <el-table-column type="selection" width="50">
         </el-table-column>
-        <el-table-column fixed="left" prop="userName" label="渠道" align="center" width="100">
+        <el-table-column fixed="left" prop="channelId" label="渠道ID" align="center" width="185">
         </el-table-column>
-        <el-table-column prop="userName" label="站点ID" align="center" width="200">
+        <el-table-column prop="substationId" label="站点ID" align="center" width="185">
         </el-table-column>
         <el-table-column prop="userName" label="用户名" align="center" width="120">
         </el-table-column>
-        <el-table-column prop="userName" label="快递公司" align="center" width="120">
+        <el-table-column prop="logisticsType" label="快递公司" align="center" width="120">
+          <template slot-scope="scope">
+            <span>{{ scope.row.logisticsType == 1 ? '圆通' : '--' }}</span>
+          </template>
         </el-table-column>
-        <el-table-column prop="userName" label="平台" align="center" width="120">
+        <el-table-column prop="shopType" label="平台" align="center" width="120">
+          <template slot-scope="scope">
+            <span>{{ scope.row.shopType == 1 ? '淘宝' : scope.row.shopType == 2 ? '天猫' :scope.row.shopType == 3 ? '京东' :scope.row.shopType == 4 ? '拼多多' : '--' }}</span>
+          </template>
         </el-table-column>
-        <el-table-column prop="userName" label="发货信息" align="center" width="180">
+        <el-table-column prop="userName" label="发货信息" align="center" width="200">
           <template slot-scope="scope">
             <div style="text-align:left;font-size:12px;">
-              <p>发货人姓名: 黄酒年</p>
-              <p>发货人电话: 15037188888</p>
-              <p>发货人手机: 18671223658</p>
-              <p>物品质量: 2.1KG</p>
-              <p>发货人地址: 浙江省大法师两年内</p>
+              <p>发货人姓名: {{ scope.row.senderName || '--' }}</p>
+              <p>发货人电话: {{ scope.row.senderTelephone || '--' }}</p>
+              <p>发货人地址: {{ (scope.row.senderProvince+scope.row.senderCity+scope.row.senderRegion+scope.row.senderAddress) || '--' }}</p>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="userName" label="收货信息" align="center" width="180">
+        <el-table-column prop="userName" label="收货信息" align="center" width="200">
           <template slot-scope="scope">
             <div style="text-align:left;font-size:12px;">
-              <p>收货人姓名: 黄酒年</p>
-              <p>收货人电话: 15037188888</p>
-              <p>收货人手机: 18671223658</p>
-              <p>物品质量: 2.1KG</p>
-              <p>发货人地址: 浙江省大法师两年内</p>
+              <p>收货人姓名: {{ scope.row.receiveName || '--' }}</p>
+              <p>收货人电话: {{ scope.row.receiveTelephone || '--' }}</p>
+              <p>收货人地址: {{ (scope.row.receiveProvince+scope.row.receiveCity+scope.row.receiveRegion+scope.row.receiveAddress) || '--' }}</p>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="userName" label="订单信息" align="center" width="200">
+          <template slot-scope="scope">
+            <div style="text-align:left;font-size:12px;">
+              <p>平台订单号: {{ scope.row.thirdOrderId || '--' }}</p>
+              <p>快递单号: {{ scope.row.logisticsOrderId || '--' }}</p>
+              <p>物品质量: {{ scope.row.weight || '--' }}KG</p>
             </div>
           </template>
         </el-table-column>
         <el-table-column fixed="right" label="操作" align="center" width="120">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small">修改订单</el-button>
+            <el-button v-if="scope.row.status==0" @click="handleClick(scope.row)" type="text" size="small">修改订单</el-button>
+            <el-button v-else type="text" size="small">--</el-button>
           </template>
         </el-table-column>
-        <el-table-column prop="userName" label="状态" align="center" width="100">
+        <el-table-column prop="status" label="状态" align="center" width="130">
           <template slot-scope="scope">
             <div style="text-align:left;font-size:12px;">
-              <p>商家未付款</p>
-              <p>站点未付款</p>
-              <p>渠道未付款</p>
-              <p>快递单: 未下单</p>
+              <p>商家{{ scope.row.payStatus==0 ? '未支付' : scope.row.payStatus==1 ? '支付成功' : scope.row.payStatus==2 ? '任务删除' : '--' }}</p>
+              <p>站点{{ scope.row.payStatus==0 ? '未支付' : scope.row.payStatus==1 ? '支付成功' : scope.row.payStatus==2 ? '任务删除' : '--' }}</p>
+              <p>渠道{{ scope.row.payStatus==0 ? '未支付' : scope.row.payStatus==1 ? '支付成功' : scope.row.payStatus==2 ? '任务删除' : '--' }}</p>
+              <p>快递单: {{ scope.row.status==0 ? '未获取运单' : scope.row.status==1 ? '已获取运单' : scope.row.status==2 ? '订单取消' : '--' }}</p>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="userName" label="发布时间" align="center" width="120">
+        <el-table-column prop="gmtCreate" label="发布时间" align="center" width="180">
         </el-table-column>
-        <el-table-column prop="userName" label="出单号时间" align="center" width="120">
+        <el-table-column prop="gmtCreate" label="出单号时间" align="center" width="180">
+          <template slot-scope="scope">
+            <span v-if="scope.row.status==1">{{ scope.row.gmtModify || '--' }}</span>
+            <span v-else>--</span>
+          </template>
         </el-table-column>
       </el-table>
     </div>
     <div class="pager">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[100, 200, 300, 400]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="400">
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSizeArray" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pageTotal">
       </el-pagination>
     </div>
     <div class="alertGrounp">
@@ -165,35 +190,177 @@
           <span class="btn" @click="getOrderListObj.show = false">确定</span>
         </div>
       </el-dialog>
+      <el-dialog title="修改订单" :append-to-body="true" :visible.sync="fixOrderObj.show" width="600px" top="15vh">
+        <div class="cont" style="text-align:center;margin-bottom:20px;">
+          <span style="display:inline-block;width:100px;text-align:right;">收件人姓名</span>
+          <el-input v-model="fixOrderObj.receiveName" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
+        </div>
+        <div class="cont" style="text-align:center;margin-bottom:20px;">
+          <span style="display:inline-block;width:100px;text-align:right;">收件人手机</span>
+          <el-input v-model="fixOrderObj.receiveTelephone" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
+        </div>
+        <div class="cont" style="text-align:center;margin-bottom:20px;">
+          <span style="display:inline-block;width:100px;text-align:right;">收件人省</span>
+          <el-input v-model="fixOrderObj.receiveProvince" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
+        </div>
+        <div class="cont" style="text-align:center;margin-bottom:20px;">
+          <span style="display:inline-block;width:100px;text-align:right;">收件人市</span>
+          <el-input v-model="fixOrderObj.receiveCity" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
+        </div>
+        <div class="cont" style="text-align:center;margin-bottom:20px;">
+          <span style="display:inline-block;width:100px;text-align:right;">收件人区</span>
+          <el-input v-model="fixOrderObj.receiveRegion" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
+        </div>
+        <div class="cont" style="text-align:center;margin-bottom:20px;">
+          <span style="display:inline-block;width:100px;text-align:right;">收件人详细地址</span>
+          <el-input v-model="fixOrderObj.receiveAddress" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
+        </div>
+        <div class="buttons" style="text-align:center;margin-top:40px;">
+          <span class="btn-b" style="margin-right:10px;" @click="fixOrderObj.show = false">取消</span>
+          <span class="btn" @click="sureToFix">确定</span>
+        </div>
+      </el-dialog>
     </div>
   </div>
 </template>
 <script type="text/ecmascript-6">
+import { pageCommon } from '../../assets/js/mixin'
 export default {
   name: 'orderList',
+  mixins: [pageCommon],
   data () {
     return {
       currentPage: 1,
+      apiUrl: '/api/order/search/getSellerOrderByCondition',
+      postObj: {
+        logisticsOrderId: '',
+        shopType: '',
+        sellerShipAddressId: '',
+        logisticsType: '',
+        payStatus: '',
+        orderStatus: '',
+        senderTelephone: '',
+        receiveTelephone: '',
+        sellerTaskId: '',
+        sellerOrderId: '',
+        time: '',
+        substationId: '',
+        sellerUserName: ''
+      },
+      // 修改订单
+      fixOrderObj: {
+        show: false,
+        sellerOrderId: '',
+        receiveName: '',
+        receiveTelephone: '',
+        receiveProvince: '',
+        receiveCity: '',
+        receiveRegion: '',
+        receiveAddress: ''
+      },
       getOrderListObj: {
         show: false,
         getWay: '1',
         filter: ''
       },
-      userList: [{
-        userName: '好傻啊gas'
-      }],
+      userList: [],
       multipleSelection: []
     }
   },
+  computed: {
+    params () {
+      return {
+        currPageNo: this.pageNo,
+        limit: this.pageSize,
+        logisticsOrderId: this.postObj.logisticsOrderId,
+        shopType: this.postObj.shopType,
+        // sellerShipAddressId: this.postObj.,
+        logisticsType: this.postObj.logisticsType,
+        payStatus: this.postObj.payStatus,
+        orderStatus: this.postObj.orderStatus,
+        senderTelephone: this.postObj.senderTelephone,
+        receiveTelephone: this.postObj.receiveTelephone,
+        sellerTaskId: this.postObj.sellerTaskId,
+        sellerOrderId: this.postObj.sellerOrderId,
+        createStartTime: this.postObj.time[0],
+        createEndTime: this.postObj.time[1],
+        substationId: this.postObj.substationId,
+        sellerUserName: this.postObj.sellerUserName
+      }
+    }
+  },
   methods: {
-    handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
+    setList (data) {
+      this.userList = data
     },
-    handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
+    sureToFix () {
+      this.$ajax.post('/api/order/operate/fixTaskOrder', this.fixOrderObj).then((data) => {
+        if (data.data.code === '200') {
+          this.$message({
+            message: '操作成功',
+            type: 'success'
+          })
+          this.getList()
+          this.fixOrderObj.show = false
+        } else {
+          this.$message({
+            message: data.data.message,
+            type: 'warning'
+          })
+        }
+      }).catch(() => {
+        this.$message.error('服务器错误！')
+      })
+    },
+    handleClick (row) {
+      let obj = {
+        show: this.fixOrderObj.show || '',
+        sellerOrderId: row.sellerOrderId || '',
+        receiveName: row.receiveName || '',
+        receiveTelephone: row.receiveTelephone || '',
+        receiveProvince: row.receiveProvince || '',
+        receiveCity: row.receiveCity || '',
+        receiveRegion: row.receiveRegion || '',
+        receiveAddress: row.receiveAddress || ''
+      }
+      this.fixOrderObj = obj
+      this.fixOrderObj.show = true
     },
     handleSelectionChange (val) {
       this.multipleSelection = val
+    },
+    // 确认导出订单
+    sureToLinkOrder () {
+      let arr = []
+      for (let m of this.multipleSelection) {
+        arr.push(m.sellerOrderId)
+      }
+      window.open('/api/task/downloadSellerOrdersByOrderIds?orderIds=' + JSON.stringify(arr))
+    },
+    // 确认重新获取运单号
+    sureToReget () {
+      let arr = []
+      for (let m of this.multipleSelection) {
+        arr.push(m.sellerOrderId)
+      }
+      this.$ajax.post('/api/order/operate/reGetLogisticsOrderIds', {
+        sellerOrderIds: arr
+      }).then((data) => {
+        if (data.data.code === '200') {
+          this.$message({
+            message: '操作成功',
+            type: 'success'
+          })
+          this.getList()
+        } else {
+          this.$message({
+            message: data.data.message,
+            type: 'warning'
+          })
+        }
+      }).catch(() => {
+        this.$message.error('服务器错误！')
+      })
     }
   }
 }
