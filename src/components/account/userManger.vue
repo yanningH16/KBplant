@@ -94,10 +94,10 @@
                 <i class="el-icon-arrow-down"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item :command="[scope.row,1]">设置等级</el-dropdown-item>
+                <!-- <el-dropdown-item :command="[scope.row,1]">设置等级</el-dropdown-item> -->
                 <el-dropdown-item :command="[scope.row,2]">禁用/解禁</el-dropdown-item>
                 <el-dropdown-item :command="[scope.row,3]">设置推荐人</el-dropdown-item>
-                <el-dropdown-item :command="[scope.row,4]">重置密码</el-dropdown-item>
+                <!-- <el-dropdown-item :command="[scope.row,4]">重置密码</el-dropdown-item> -->
               </el-dropdown-menu>
             </el-dropdown>
           </template>

@@ -41,6 +41,7 @@
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item :command="[scope.row,1]">编辑</el-dropdown-item>
                 <el-dropdown-item :command="[scope.row,3]">扣除金额</el-dropdown-item>
+                <el-dropdown-item :command="[scope.row,4]">重置密码</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </template>
@@ -82,6 +83,15 @@
         <div class="buttons" style="text-align:center;margin-top:40px;">
           <span class="btn-b" style="margin-right:10px;" @click="deleMoneyObj.show = false">取消</span>
           <span class="btn" @click="sureToDele">确定</span>
+        </div>
+      </el-dialog>
+      <el-dialog title="重置密码" :append-to-body="true" :visible.sync="resetPassObj.show" width="600px" top="25vh">
+        <div class="cont" style="text-align:center;">
+          <span style="font-size:18px;font-wight:bold;">你确定要重置该用户的密码吗?请谨慎操作</span>
+        </div>
+        <div class="buttons" style="text-align:center;margin-top:40px;">
+          <span class="btn-b" style="margin-right:10px;" @click="resetPassObj.show = false">取消</span>
+          <span class="btn" @click="sureToReset">确定</span>
         </div>
       </el-dialog>
       <el-dialog :title="editObj.type==0 ? '渠道编辑' : '添加渠道'" :append-to-body="true" :visible.sync="editObj.show" width="600px" top="5vh">
@@ -186,6 +196,9 @@ export default {
         adminPassword: '',
         yuantongPrice: ''
       },
+      resetPassObj: {
+        show: false
+      },
       tableData: []
     }
   },
@@ -241,9 +254,35 @@ export default {
         }
         this.editObj.show = true
       } else if (command[1] === 3) { // 扣除金额
-        this.deleMoneyObj.show = true
         this.deleMoneyObj.row = command[0]
+        this.deleMoneyObj.show = true
+      } else if (command[1] === 4) { // 重置密码
+        this.resetPassObj.row = command[0]
+        this.resetPassObj.show = true
       }
+    },
+    // 确认重置密码
+    sureToReset () {
+      this.$ajax.post('/api/channel/resetPwd', {
+        platformAccountId: this.userInfo.platformAccountId,
+        channelAccountId: this.resetPassObj.row.adminAccountId
+      }).then((data) => {
+        if (data.data.code === '200') {
+          this.$message({
+            message: '操作成功',
+            type: 'success'
+          })
+          this.getList()
+          this.resetPassObj.show = false
+        } else {
+          this.$message({
+            message: data.data.message,
+            type: 'warning'
+          })
+        }
+      }).catch(() => {
+        this.$message.error('服务器错误！')
+      })
     },
     // 确认充值
     sureToRecharge () {

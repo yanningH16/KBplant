@@ -4,7 +4,7 @@
       <ul class="left">
         <li>
           <span>物流平台</span>
-          <el-select v-model="logisticsType" style="width:170px;margin-right:20px;" placeholder="请选择">
+          <el-select v-model="postObj.logisticsType" style="width:170px;margin-right:20px;" placeholder="请选择">
             <el-option label="全部" value="">
             </el-option>
             <el-option label="圆通" value="1">
@@ -13,7 +13,7 @@
         </li>
         <li>
           <span>电商平台</span>
-          <el-select v-model="shopType" style="width:170px;margin-right:20px;" placeholder="请选择">
+          <el-select v-model="postObj.shopType" style="width:170px;margin-right:20px;" placeholder="请选择">
             <el-option label="全部" value="">
             </el-option>
             <el-option label="淘宝" value="1">
@@ -28,7 +28,7 @@
         </li>
         <li>
           <span>付款状态</span>
-          <el-select v-model="payStatus" style="width:170px;margin-right:20px;" placeholder="请选择">
+          <el-select v-model="postObj.payStatus" style="width:170px;margin-right:20px;" placeholder="请选择">
             <el-option label="全部" value="">
             </el-option>
             <el-option label="未支付" value="0">
@@ -41,35 +41,35 @@
         </li>
         <li>
           <span>快递单号</span>
-          <el-input v-model="logisticsOrderId" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
+          <el-input v-model="postObj.logisticsOrderId" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
         </li>
         <li>
           <span>站点ID</span>
-          <el-input v-model="substationId" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
+          <el-input v-model="postObj.substationId" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
         </li>
         <li>
           <span>任务ID</span>
-          <el-input v-model="sellerTaskId" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
+          <el-input v-model="postObj.sellerTaskId" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
         </li>
         <li>
           <span>订单号</span>
-          <el-input v-model="sellerOrderId" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
+          <el-input v-model="postObj.thirdOrderId" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
         </li>
         <li>
           <span>用户名</span>
-          <el-input v-model="sellerUserName" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
+          <el-input v-model="postObj.sellerUserName" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
         </li>
         <li>
           <span>发件手机</span>
-          <el-input v-model="senderTelephone" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
+          <el-input v-model="postObj.senderTelephone" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
         </li>
         <li>
           <span>收件手机</span>
-          <el-input v-model="receiveTelephone" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
+          <el-input v-model="postObj.receiveTelephone" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
         </li>
         <li>
           <span>快递单状态</span>
-          <el-select v-model="orderStatus" style="width:170px;margin-right:20px;" placeholder="请选择">
+          <el-select v-model="postObj.orderStatus" style="width:170px;margin-right:20px;" placeholder="请选择">
             <el-option label="全部" value="">
             </el-option>
             <el-option label="未获取运单" value="0">
@@ -132,12 +132,13 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="userName" label="订单信息" align="center" width="200">
+        <el-table-column prop="userName" label="订单信息" align="center" width="220">
           <template slot-scope="scope">
             <div style="text-align:left;font-size:12px;">
               <p>平台订单号: {{ scope.row.thirdOrderId || '--' }}</p>
               <p>快递单号: {{ scope.row.logisticsOrderId || '--' }}</p>
               <p>物品质量: {{ scope.row.weight || '--' }}KG</p>
+              <p>商品名称: {{ scope.row.productName || '--' }}</p>
             </div>
           </template>
         </el-table-column>
@@ -242,7 +243,7 @@ export default {
         senderTelephone: '',
         receiveTelephone: '',
         sellerTaskId: '',
-        sellerOrderId: '',
+        thirdOrderId: '',
         time: '',
         substationId: '',
         sellerUserName: ''
@@ -281,7 +282,7 @@ export default {
         senderTelephone: this.postObj.senderTelephone,
         receiveTelephone: this.postObj.receiveTelephone,
         sellerTaskId: this.postObj.sellerTaskId,
-        sellerOrderId: this.postObj.sellerOrderId,
+        thirdOrderId: this.postObj.thirdOrderId,
         createStartTime: this.postObj.time[0],
         createEndTime: this.postObj.time[1],
         substationId: this.postObj.substationId,
