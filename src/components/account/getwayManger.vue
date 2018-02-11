@@ -219,7 +219,7 @@ export default {
       this.tableData = data
     },
     handleClick (row) {
-      console.log(row)
+      // console.log(row)
     },
     userSet (command) {
       if (command[1] === 0) { // 添加金额
@@ -341,7 +341,7 @@ export default {
           })
         }
       }).catch((err) => {
-        console.log(err)
+        console.error(err)
         this.$message.error('服务器错误！')
       })
     },
