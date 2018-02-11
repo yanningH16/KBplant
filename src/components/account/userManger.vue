@@ -85,27 +85,29 @@
         </el-table-column>
         <el-table-column prop="levelDetail" label="会员等级" align="center" width="120">
         </el-table-column>
-        <el-table-column fixed="right" label="操作" align="center" width="120">
+        <el-table-column fixed="right" label="操作" align="center" width="200">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small">审核</el-button>
+            <!-- <el-button @click="handleClick(scope.row)" type="text" size="small">审核</el-button>
             <el-dropdown @command="userSet">
               <span style="font-size:12px;color:#409EFF;">
                 更多
                 <i class="el-icon-arrow-down"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
-                <!-- <el-dropdown-item :command="[scope.row,1]">设置等级</el-dropdown-item> -->
+                <el-dropdown-item :command="[scope.row,1]">设置等级</el-dropdown-item>
                 <el-dropdown-item :command="[scope.row,2]">禁用/解禁</el-dropdown-item>
                 <el-dropdown-item :command="[scope.row,3]">设置推荐人</el-dropdown-item>
-                <!-- <el-dropdown-item :command="[scope.row,4]">重置密码</el-dropdown-item> -->
+                <el-dropdown-item :command="[scope.row,4]">重置密码</el-dropdown-item>
               </el-dropdown-menu>
-            </el-dropdown>
+            </el-dropdown> -->
+            <el-button @click="userSet([scope.row,2])" type="text" size="small">禁用/解禁</el-button>
+            <el-button @click="userSet([scope.row,3])" type="text" size="small">设置推荐人</el-button>
           </template>
         </el-table-column>
         <el-table-column prop="price" label="圆通价" align="center" width="120">
         </el-table-column>
-        <el-table-column prop="checkStatusDetail" label="审核状态" align="center" width="120">
-        </el-table-column>
+        <!-- <el-table-column prop="checkStatusDetail" label="审核状态" align="center" width="120">
+        </el-table-column> -->
         <el-table-column prop="statusDetail" label="用户状态" align="center" width="120">
         </el-table-column>
         <el-table-column prop="lastLoginTime" label="最后登录时间" align="center" width="200">

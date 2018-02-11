@@ -139,6 +139,7 @@
         <div class="cont" style="text-align:center;margin-bottom:20px;">
           <span style="display:inline-block;width:80px;text-align:right;">管理员帐号</span>
           <el-input v-model="editObj.adminAccount" :disabled="editObj.type==0" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
+          <p v-if="editObj.type==1" style="color: #ff3341;">注: 管理员帐号添加后不可修改!</p>
         </div>
         <div class="cont" v-if="editObj.type==1" style="text-align:center;margin-bottom:20px;">
           <span style="display:inline-block;width:80px;text-align:right;">管理员密码</span>
