@@ -21,6 +21,11 @@
           <strong>未认证</strong>
         </span>
       </div>
+      <!-- <div class="price">
+        <span>余额:￥120.2</span>
+        <span>圆通:￥1元/单</span>
+        <em>充值</em>
+      </div> -->
       <div class="info" @click="showInfo=!showInfo">
         <b class="head">
           Y
@@ -73,6 +78,7 @@ export default {
       showPass: false,
       showInfo: false,
       task: false,
+      moneyObj: {},
       fixPassObj: {
         oldpass: '',
         newpass1: '',
@@ -85,6 +91,9 @@ export default {
       'userInfo'
     ])
   },
+  // watch: {
+  //   '$route': 'getPrice'
+  // },
   methods: {
     logout () {
       this.$confirm('确认退出登录?', '提示', {
@@ -119,7 +128,26 @@ export default {
       }).catch(() => {
         this.$message.error('服务器错误！')
       })
+    },
+    getPrice () {
+      this.$ajax.post('/api/platform/getBalance', {
+        userAccountId: this.userInfo.platformAccountId
+      }).then((data) => {
+        if (data.data.code === '200') {
+          this.moneyObj = data.data.data
+        } else {
+          this.$message({
+            message: data.data.message,
+            type: 'warning'
+          })
+        }
+      }).catch(() => {
+        this.$message.error('服务器错误！')
+      })
     }
+  },
+  mounted () {
+    // this.getPrice()
   }
 }
 </script>
@@ -135,9 +163,18 @@ export default {
     float right
     display flex
     line-height 100%
-    width 150px
+    // width 150px
+    width auto
     height 100%
     text-align right
+    padding 0 20px
+    .price
+      margin-right 20px
+      span
+        margin-right 10px
+      em
+        cursor pointer
+        color #409EFF
     >div
       line-height 60px
     .record
