@@ -3,7 +3,7 @@
     <div class="search">
       <div class="left">
         <span>日期查询</span>
-        <el-date-picker v-model="time" value-format="yyyy-MM-dd" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" style="width:350px;margin-right:10px;">
+        <el-date-picker v-model="time" value-format="yyyy-MM-dd HH:mm:ss" :default-time="['00:00:00', '23:59:59']" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" style="width:350px;margin-right:10px;">
         </el-date-picker>
         <span>站点ID</span>
         <el-input v-model="substationId" style="width:180px;" placeholder="请输入内容"></el-input>
