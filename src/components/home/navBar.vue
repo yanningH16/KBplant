@@ -56,6 +56,9 @@ export default {
                 header: '分站管理',
                 router: 'stationManger'
               }, {
+                header: 'api管理',
+                router: 'apiManger'
+              }, {
                 header: '推荐人管理',
                 router: 'pushManger'
               }
@@ -77,6 +80,10 @@ export default {
               {
                 header: '渠道充值记录',
                 router: 'getwayRechargeList'
+              },
+              {
+                header: 'api充值记录',
+                router: 'apiRechargeList'
               }
             ]
           },
@@ -111,6 +118,10 @@ export default {
               {
                 header: '站点报表统计',
                 router: 'stationList'
+              },
+              {
+                header: 'api报表统计',
+                router: 'apiList'
               }
             ]
           }
