@@ -11,6 +11,9 @@
     <div class="table">
       <el-table :data="userList" style="width: 100%">
         <el-table-column fixed="left" prop="gmtCreate" label="日期" align="center" width="185">
+          <template slot-scope="scope">
+            <span>{{ scope.row.gmtCreate ? scope.row.gmtCreate.split(' ')[0] : '--' }}</span>
+          </template>
         </el-table-column>
         <el-table-column prop="taskNum" label="任务数" align="center" width="100">
         </el-table-column>
