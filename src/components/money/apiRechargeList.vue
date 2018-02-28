@@ -3,7 +3,7 @@
     <div class="search">
       <ul class="left">
         <li>
-          <span>站点ID</span>
+          <span>Api编号</span>
           <el-input v-model="substationId" style="width:180px;margin-right:20px;" placeholder="请输入内容"></el-input>
         </li>
         <li style="text-align:left;">
@@ -13,17 +13,17 @@
     </div>
     <div class="table">
       <el-table :data="tableData" style="width: 100%">
-        <el-table-column prop="substationId" label="站点ID" align="center">
+        <el-table-column prop="apiAccountId" label="Api编号" align="center">
         </el-table-column>
-        <el-table-column prop="substationName" label="站点名称" align="center">
+        <el-table-column prop="apiAccountName" label="Api名称" align="center">
         </el-table-column>
-        <el-table-column prop="rechargeId" label="充值编号" align="center">
+        <el-table-column prop="fundFlowId" label="充值编号" align="center">
         </el-table-column>
-        <el-table-column prop="rechargeId" label="交易号" align="center">
+        <!-- <el-table-column prop="rechargeId" label="交易号" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.aaa ? scope.row.aaa : '--' }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column prop="money" label="充值金额" align="center">
         </el-table-column>
         <el-table-column prop="address" label="充值前金额" align="center">
@@ -36,7 +36,9 @@
             <span>{{ scope.row.afterMoney ? scope.row.afterMoney : '--' }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="stautsDetail" label="充值状态" align="center">
+        <el-table-column prop="statusDetail" label="充值状态" align="center">
+        </el-table-column>
+        <el-table-column prop="remarks" label="充值备注" align="center">
         </el-table-column>
         <el-table-column prop="gmtCreate" label="充值时间" align="center">
         </el-table-column>
@@ -56,9 +58,8 @@ export default {
   data () {
     return {
       currentPage: 1,
-      apiUrl: '/api/substation/recharge/getRechargeListForPlatform',
+      apiUrl: '/api/apiAccount/getRechargeList',
       payType: '',
-      rechargeStatus: '',
       substationId: '',
       tableData: []
     }
@@ -66,9 +67,7 @@ export default {
   computed: {
     params () {
       return {
-        payType: this.payType,
-        rechargeStatus: this.rechargeStatus,
-        substationId: this.substationId,
+        apiAccountId: this.substationId,
         pageNo: this.pageNo,
         pageSize: this.pageSize
       }

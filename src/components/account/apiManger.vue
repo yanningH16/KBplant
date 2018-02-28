@@ -2,13 +2,13 @@
   <div class="getwayManger">
     <div class="table">
       <el-table :data="tableData" style="width: 100%">
-        <el-table-column prop="channelId" label="站点ID" align="center" width="185">
+        <el-table-column prop="apiAccountId" label="Api编号" align="center" width="185">
         </el-table-column>
-        <el-table-column prop="name" label="用户名" align="center">
+        <el-table-column prop="userName" label="用户名" align="center">
         </el-table-column>
-        <el-table-column prop="serviceQq" label="联系人姓名" align="center">
+        <el-table-column prop="company" label="联系人姓名" align="center">
         </el-table-column>
-        <el-table-column prop="serviceTelephone" label="手机" align="center">
+        <el-table-column prop="telephone" label="手机" align="center">
         </el-table-column>
         <el-table-column prop="balance" label="余额" align="center">
         </el-table-column>
@@ -23,15 +23,15 @@
         </el-table-column>
       </el-table>
     </div>
-    <div class="pager">
+    <!-- <div class="pager">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSizeArray" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pageTotal">
       </el-pagination>
-    </div>
+    </div> -->
     <div class="alertGroup">
-      <el-dialog title="渠道充值" :append-to-body="true" :visible.sync="rechargeObj.show" width="600px" top="25vh">
+      <el-dialog title="Api充值" :append-to-body="true" :visible.sync="rechargeObj.show" width="600px" top="25vh">
         <div class="cont" style="text-align:center;margin-bottom:20px;">
           <span style="display:inline-block;width:60px;text-align:right;">金额(元)</span>
-          <el-input v-model="rechargeObj.money" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
+          <el-input v-model="rechargeObj.money" style="width:300px;margin-left:10px;" placeholder="请输入充值金额"></el-input>
         </div>
         <div class="cont" style="text-align:center;margin-bottom:20px;">
           <span style="display:inline-block;width:60px;text-align:right;">备注</span>
@@ -42,8 +42,11 @@
           <el-input v-model="rechargeObj.getAccount" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
         </div> -->
         <div class="buttons" style="text-align:center;margin-top:40px;">
-          <span class="btn-b" style="margin-right:10px;" @click="rechargeObj.show = false">取消</span>
-          <span class="btn" @click="sureToRecharge">确定</span>
+          <!-- <span class="btn-b" style="margin-right:10px;" @click="rechargeObj.show = false">取消</span> -->
+          <span class="btn" @click="sureToRecharge" v-show="isPoting">确定</span>
+          <el-button type="info" disabled v-show="!isPoting">
+            <em class="el-icon-loading"></em>
+          </el-button>
         </div>
       </el-dialog>
     </div>
@@ -60,7 +63,7 @@ export default {
       currentPage: 1,
       channelName: '',
       bankArr: [],
-      apiUrl: '/api/channel/getPagingListByChannelName',
+      apiUrl: '/api/apiAccount/getApiAccountList',
       rechargeObj: {
         show: false,
         row: '',
@@ -91,15 +94,16 @@ export default {
       resetPassObj: {
         show: false
       },
-      tableData: []
+      tableData: [],
+      apiAccountId: '',
+      isPoting: true
     }
   },
   computed: {
     params () {
       return {
-        channelName: this.channelName,
-        pageNo: this.pageNo,
-        pageSize: this.pageSize
+        // pageNo: this.pageNo,
+        // pageSize: this.pageSize
       }
     },
     ...mapGetters([
@@ -114,6 +118,7 @@ export default {
       // console.log(row)
     },
     userSet (command) {
+      this.apiAccountId = command[0].apiAccountId
       if (command[1] === 0) { // 添加金额
         this.rechargeObj.show = true
         this.rechargeObj.row = command[0]
@@ -121,11 +126,11 @@ export default {
     },
     // 确认充值
     sureToRecharge () {
-      this.$ajax.post('/api/channel/recharge/addMoneyToChannelFund', {
+      this.isPoting = false
+      this.$ajax.post('/apiapiAccount/recharge', {
         money: this.rechargeObj.money,
         comment: this.rechargeObj.common,
-        channelId: this.rechargeObj.row.channelId,
-        operateUserId: this.userInfo.platformAccountId
+        apiAccountId: this.apiAccountId
       }).then((data) => {
         if (data.data.code === '200') {
           this.rechargeObj.show = false
@@ -134,6 +139,7 @@ export default {
             type: 'success'
           })
           this.getList()
+          this.isPoting = true
           for (let m in this.rechargeObj) {
             if (!(m === 'show')) {
               this.rechargeObj[m] = ''
@@ -148,26 +154,7 @@ export default {
       }).catch((err) => {
         console.error(err)
       })
-    },
-    // 获取银行列表
-    getBank () {
-      this.$ajax.post('/api/config/bankCard/getBankInfoList', {
-      }).then((data) => {
-        if (data.data.code === '200') {
-          this.bankArr = data.data.data
-        } else {
-          this.$message({
-            message: data.data.message,
-            type: 'warning'
-          })
-        }
-      }).catch((err) => {
-        console.error(err)
-      })
     }
-  },
-  mounted () {
-    this.getBank()
   }
 }
 </script>
