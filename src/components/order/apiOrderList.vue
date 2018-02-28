@@ -321,9 +321,9 @@ export default {
     sureToLinkOrder () {
       let arr = []
       for (let m of this.multipleSelection) {
-        arr.push(m.sellerOrderId)
+        arr.push(m.orderId)
       }
-      window.open('/api/task/downloadSellerOrdersByOrderIds?orderIds=' + JSON.stringify(arr))
+      window.open('/api/task/downloadApiOrdersByApiOrderIds/excel?orderIds=' + JSON.stringify(arr))
     },
     // 确认重新获取运单号
     sureToReget () {

@@ -340,7 +340,7 @@ export default {
       for (let m of this.multipleSelection) {
         arr.push(m.sellerOrderId)
       }
-      window.open('/api/task/downloadSellerOrdersByOrderIds?orderIds=' + JSON.stringify(arr))
+      window.open('/api/task/downloadSellerOrdersByOrderIds/excel?orderIds=' + JSON.stringify(arr))
     },
     // 确认重新获取运单号
     sureToReget () {
