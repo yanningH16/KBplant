@@ -56,7 +56,7 @@
       <el-dialog title="渠道充值" :append-to-body="true" :visible.sync="rechargeObj.show" width="600px" top="25vh">
         <div class="cont" style="text-align:center;margin-bottom:20px;">
           <span style="display:inline-block;width:60px;text-align:right;">金额(元)</span>
-          <el-input v-model="rechargeObj.money" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
+          <el-input type="number" v-model="rechargeObj.money" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
         </div>
         <div class="cont" style="text-align:center;margin-bottom:20px;">
           <span style="display:inline-block;width:60px;text-align:right;">备注</span>
@@ -67,22 +67,28 @@
           <el-input v-model="rechargeObj.getAccount" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
         </div> -->
         <div class="buttons" style="text-align:center;margin-top:40px;">
-          <span class="btn-b" style="margin-right:10px;" @click="rechargeObj.show = false">取消</span>
-          <span class="btn" @click="sureToRecharge">确定</span>
+          <!-- <span class="btn-b" style="margin-right:10px;" @click="rechargeObj.show = false">取消</span> -->
+          <span v-show="rechargeIsPosting" class="btn" @click="sureToRecharge">确定</span>
+          <span v-show="!rechargeIsPosting" class="btn">
+            <em class="el-icon-loading"></em>
+          </span>
         </div>
       </el-dialog>
       <el-dialog title="扣除余额" :append-to-body="true" :visible.sync="deleMoneyObj.show" width="600px" top="25vh">
         <div class="cont" style="text-align:center;">
           <span>金额</span>
-          <el-input v-model="deleMoneyObj.money" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
+          <el-input type="number" v-model="deleMoneyObj.money" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
         </div>
         <div class="cont" style="text-align:center;margin-top:20px;">
           <span>备注</span>
           <el-input v-model="deleMoneyObj.common" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
         </div>
         <div class="buttons" style="text-align:center;margin-top:40px;">
-          <span class="btn-b" style="margin-right:10px;" @click="deleMoneyObj.show = false">取消</span>
-          <span class="btn" @click="sureToDele">确定</span>
+          <!-- <span class="btn-b" style="margin-right:10px;" @click="deleMoneyObj.show = false">取消</span> -->
+          <span v-show="reduceIsPosting" class="btn" @click="sureToDele">确定</span>
+          <span v-show="!reduceIsPosting" class="btn">
+            <em class="el-icon-loading"></em>
+          </span>
         </div>
       </el-dialog>
       <el-dialog title="重置密码" :append-to-body="true" :visible.sync="resetPassObj.show" width="600px" top="25vh">
@@ -168,6 +174,8 @@ export default {
     return {
       currentPage: 1,
       channelName: '',
+      rechargeIsPosting: true, // 充值菊花
+      reduceIsPosting: true, // 减少金额菊花
       bankArr: [],
       apiUrl: '/api/channel/getPagingListByChannelName',
       rechargeObj: {
@@ -287,6 +295,7 @@ export default {
     },
     // 确认充值
     sureToRecharge () {
+      this.rechargeIsPosting = false // 开启菊花
       this.$ajax.post('/api/channel/recharge/addMoneyToChannelFund', {
         money: this.rechargeObj.money,
         comment: this.rechargeObj.common,
@@ -305,6 +314,7 @@ export default {
               this.rechargeObj[m] = ''
             }
           }
+          this.rechargeIsPosting = true // 关闭菊花
         } else {
           this.$message({
             message: data.data.message,
@@ -317,6 +327,7 @@ export default {
     },
     // 确认扣除金额
     sureToDele () {
+      this.reduceIsPosting = false // 开启菊花
       this.$ajax.post('/api/channel/recharge/reduceMoneyFromChannelFund', {
         money: this.deleMoneyObj.money,
         comment: this.deleMoneyObj.common,
@@ -335,6 +346,7 @@ export default {
               this.deleMoneyObj[m] = ''
             }
           }
+          this.reduceIsPosting = true // 关闭菊花
         } else {
           this.$message({
             message: data.data.message,

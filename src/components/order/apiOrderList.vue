@@ -1,5 +1,5 @@
 <template>
-  <div class="orderList">
+  <div class="apiOrderList">
     <div class="search">
       <ul class="left">
         <li>
@@ -44,20 +44,12 @@
           <el-input v-model="postObj.logisticsOrderId" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
         </li>
         <li>
-          <span>站点ID</span>
-          <el-input v-model="postObj.substationId" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
-        </li>
-        <li>
-          <span>任务ID</span>
-          <el-input v-model="postObj.sellerTaskId" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
+          <span>api用户ID</span>
+          <el-input v-model="postObj.apiAccountId" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
         </li>
         <li>
           <span>订单号</span>
           <el-input v-model="postObj.thirdOrderId" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
-        </li>
-        <li>
-          <span>用户名</span>
-          <el-input v-model="postObj.sellerUserName" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
         </li>
         <li>
           <span>发件手机</span>
@@ -67,7 +59,7 @@
           <span>收件手机</span>
           <el-input v-model="postObj.receiveTelephone" style="width:170px;margin-right:20px;" placeholder="请输入内容"></el-input>
         </li>
-        <li>
+        <!-- <li>
           <span>快递单状态</span>
           <el-select v-model="postObj.orderStatus" style="width:170px;margin-right:20px;" placeholder="请选择">
             <el-option label="全部" value="">
@@ -79,7 +71,7 @@
             <el-option label="订单取消" value="2">
             </el-option>
           </el-select>
-        </li>
+        </li> -->
         <li style="width:auto;margin-left:15px;">
           <span>发布日期</span>
           <el-date-picker v-model="postObj.time" value-format="yyyy-MM-dd HH:mm:ss" :default-time="['00:00:00', '23:59:59']" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" style="width:350px;margin-right:20px;">
@@ -89,7 +81,7 @@
           <span @click="getList" class="btn" style="text-align:center;">查询</span>
         </li>
         <li style="flex:1;text-align:right;">
-          <span @click="sureToReget" class="btn-b" style="text-align:center;margin-right:20px;">重新获取</span>
+          <!-- <span @click="sureToReget" class="btn-b" style="text-align:center;margin-right:20px;">重新获取</span> -->
           <span @click="sureToLinkOrder" class="btn-b" style="text-align:center;">导出订单</span>
         </li>
       </ul>
@@ -98,78 +90,73 @@
       <el-table :data="userList" @selection-change="handleSelectionChange" style="width: 100%">
         <el-table-column type="selection" width="50">
         </el-table-column>
-        <el-table-column fixed="left" prop="channelId" label="渠道ID" align="center" width="110">
+        <el-table-column fixed="left" prop="apiAccountId" label="api编号" align="center" width="110">
         </el-table-column>
-        <el-table-column prop="channelName" label="渠道名称" align="center" width="120">
+        <el-table-column prop="apiTaskId" label="api任务ID" align="center" width="110">
         </el-table-column>
-        <el-table-column prop="substationId" label="站点ID" align="center" width="110">
+        <el-table-column prop="cellPhone" label="联系人姓名" align="center" width="185">
         </el-table-column>
-        <el-table-column prop="substationName" label="分站名称" align="center" width="120">
-        </el-table-column>
-        <el-table-column prop="userName" label="用户名" align="center" width="120">
-        </el-table-column>
-        <el-table-column prop="logisticsType" label="快递公司" align="center" width="120">
+        <!-- <el-table-column prop="userName" label="用户名" align="center" width="120">
+        </el-table-column> -->
+        <el-table-column prop="platformType" label="快递公司" align="center" width="120">
           <template slot-scope="scope">
-            <span>{{ scope.row.logisticsType == 1 ? '圆通' : '--' }}</span>
+            <span>圆通</span>
           </template>
         </el-table-column>
-        <el-table-column prop="shopType" label="平台" align="center" width="120">
+        <el-table-column prop="platformType" label="平台" align="center" width="120">
           <template slot-scope="scope">
-            <span>{{ scope.row.shopType == 1 ? '淘宝' : scope.row.shopType == 2 ? '天猫' :scope.row.shopType == 3 ? '京东' :scope.row.shopType == 4 ? '拼多多' : '--' }}</span>
+            <span>{{ scope.row.platformType == 1 ? '淘宝' : scope.row.platformType == 2 ? '天猫' :scope.row.platformType == 3 ? '京东' :scope.row.platformType == 4 ? '拼多多' : '--' }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="userName" label="发货信息" align="center" width="200">
           <template slot-scope="scope">
             <div style="text-align:left;font-size:12px;">
-              <p>发货人姓名: {{ scope.row.senderName || '--' }}</p>
-              <p>发货人电话: {{ scope.row.senderTelephone || '--' }}</p>
-              <p>发货人地址: {{ ((scope.row.senderProvince||'')+(scope.row.senderCity||'')+(scope.row.senderRegion||'')+(scope.row.senderAddress||'')) || '--' }}</p>
+              <p>发货人姓名: {{ scope.row.sendContact || '--' }}</p>
+              <p>发货人电话: {{ scope.row.sendCellPhone || '--' }}</p>
+              <p>发货人地址: {{ ((scope.row.sendState||'')+(scope.row.sendCity||'')+(scope.row.sendDistrict||'')+(scope.row.sendAddress||'')) || '--' }}</p>
             </div>
           </template>
         </el-table-column>
         <el-table-column prop="userName" label="收货信息" align="center" width="200">
           <template slot-scope="scope">
             <div style="text-align:left;font-size:12px;">
-              <p>收货人姓名: {{ scope.row.receiveName || '--' }}</p>
-              <p>收货人电话: {{ scope.row.receiveTelephone || '--' }}</p>
-              <p>收货人地址: {{ ((scope.row.receiveProvince||'')+(scope.row.receiveCity||'')+(scope.row.receiveRegion||'')+(scope.row.receiveAddress||'')) || '--' }}</p>
+              <p>收货人姓名: {{ scope.row.contact || '--' }}</p>
+              <p>收货人电话: {{ scope.row.cellPhone || '--' }}</p>
+              <p>收货人地址: {{ ((scope.row.state||'')+(scope.row.city||'')+(scope.row.city||'')+(scope.row.address||'')) || '--' }}</p>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="userName" label="订单信息" align="center" width="220">
+        <el-table-column prop="userName" label="订单信息" align="center" width="230">
           <template slot-scope="scope">
             <div style="text-align:left;font-size:12px;">
-              <p>平台订单号: {{ scope.row.thirdOrderId || '--' }}</p>
-              <p>快递单号: {{ scope.row.logisticsOrderId || '--' }}</p>
+              <p>平台订单号: {{ scope.row.orderId || '--' }}</p>
+              <p>快递单号: {{ scope.row.waybillNo || '--' }}</p>
               <p>物品质量: {{ scope.row.weight || '--' }}KG</p>
-              <p>商品名称: {{ scope.row.productName || '--' }}</p>
+              <p>商品名称: {{ scope.row.productTitle || '--' }}</p>
             </div>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" label="操作" align="center" width="120">
+        <!-- <el-table-column fixed="right" label="操作" align="center" width="120">
           <template slot-scope="scope">
             <el-button v-if="scope.row.status==0" @click="handleClick(scope.row)" type="text" size="small">修改订单</el-button>
             <el-button v-else type="text" size="small">--</el-button>
           </template>
-        </el-table-column>
-        <el-table-column prop="status" label="状态" align="center" width="130">
+        </el-table-column> -->
+        <el-table-column fixed="right" prop="status" label="状态" align="center" width="130">
           <template slot-scope="scope">
             <div style="text-align:left;font-size:12px;">
-              <p>商家{{ scope.row.payStatus==0 ? '未支付' : scope.row.payStatus==1 ? '支付成功' : scope.row.payStatus==2 ? '任务删除' : '--' }}</p>
-              <p>站点{{ scope.row.payStatus==0 ? '未支付' : scope.row.payStatus==1 ? '支付成功' : scope.row.payStatus==2 ? '任务删除' : '--' }}</p>
-              <p>渠道{{ scope.row.payStatus==0 ? '未支付' : scope.row.payStatus==1 ? '支付成功' : scope.row.payStatus==2 ? '任务删除' : '--' }}</p>
-              <p>快递单: {{ scope.row.status==0 ? '未获取运单' : scope.row.status==1 ? '已获取运单' : scope.row.status==2 ? '订单取消' : '--' }}</p>
+              <p>快递单: {{ scope.row.status==0 ? '成功获取' : scope.row.status==1 ? '获取中' : scope.row.status==2 ? '获取失败' : scope.row.status==3 ? '订单重复' : '--' }}</p>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="gmtCreate" label="发布时间" align="center" width="180">
-        </el-table-column>
-        <el-table-column prop="gmtCreate" label="出单号时间" align="center" width="180">
+        <!-- <el-table-column prop="gmtCreate" label="发布时间" align="center" width="180">
+        </el-table-column> -->
+        <!-- <el-table-column prop="gmtCreate" label="出单号时间" align="center" width="180">
           <template slot-scope="scope">
             <span v-if="scope.row.status==1">{{ scope.row.gmtModify || '--' }}</span>
             <span v-else>--</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
     </div>
     <div class="pager">
@@ -231,12 +218,12 @@
 <script type="text/ecmascript-6">
 import { pageCommon } from '../../assets/js/mixin'
 export default {
-  name: 'orderList',
+  name: 'apiOrderList',
   mixins: [pageCommon],
   data () {
     return {
       currentPage: 1,
-      apiUrl: '/api/order/search/getSellerOrderByCondition',
+      apiUrl: '/api/apiAccount/getOrderList',
       postObj: {
         logisticsOrderId: '',
         shopType: '',
@@ -249,7 +236,7 @@ export default {
         sellerTaskId: '',
         thirdOrderId: '',
         time: '',
-        substationId: '',
+        apiAccountId: '',
         sellerUserName: ''
       },
       // 修改订单
@@ -275,22 +262,18 @@ export default {
   computed: {
     params () {
       return {
-        currPageNo: this.pageNo,
-        limit: this.pageSize,
-        logisticsOrderId: this.postObj.logisticsOrderId,
-        shopType: this.postObj.shopType,
-        // sellerShipAddressId: this.postObj.,
-        logisticsType: this.postObj.logisticsType,
-        payStatus: this.postObj.payStatus,
-        orderStatus: this.postObj.orderStatus,
-        senderTelephone: this.postObj.senderTelephone,
-        receiveTelephone: this.postObj.receiveTelephone,
-        sellerTaskId: this.postObj.sellerTaskId,
-        thirdOrderId: this.postObj.thirdOrderId,
-        createStartTime: this.postObj.time[0],
-        createEndTime: this.postObj.time[1],
-        substationId: this.postObj.substationId,
-        sellerUserName: this.postObj.sellerUserName
+        logiType: this.postObj.logisticsType,
+        platform: this.postObj.shopType,
+        status: this.postObj.payStatus,
+        waybillNo: this.postObj.logisticsOrderId,
+        apiAccountId: this.postObj.apiAccountId,
+        orderId: this.postObj.thirdOrderId,
+        sendTelephone: this.postObj.senderTelephone,
+        telephone: this.postObj.receiveTelephone,
+        startTime: this.postObj.time[0],
+        endTime: this.postObj.time[1],
+        pageNo: this.pageNo,
+        pageSize: this.pageSize
       }
     }
   },
@@ -371,7 +354,7 @@ export default {
 }
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
-.orderList
+.apiOrderList
   margin 20px
   padding 20px
   background #ffffff

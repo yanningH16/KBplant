@@ -99,6 +99,10 @@ export default {
               {
                 header: '订单列表',
                 router: 'orderList'
+              },
+              {
+                header: 'api订单列表',
+                router: 'apiOrderList'
               }
             ]
           },

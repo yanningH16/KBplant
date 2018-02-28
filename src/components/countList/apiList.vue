@@ -3,10 +3,10 @@
     <div class="search">
       <div class="left">
         <span>日期查询</span>
-        <el-date-picker v-model="time" value-format="yyyy-MM-dd HH:mm:ss" :default-time="['00:00:00', '23:59:59']" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" style="width:350px;margin-right:10px;">
+        <el-date-picker v-model="time" value-format="yyyyMMdd" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" style="width:350px;margin-right:10px;">
         </el-date-picker>
-        <span>api编号</span>
-        <el-input v-model="channelId" style="width:180px;" placeholder="请输入内容"></el-input>
+        <!-- <span>api编号</span>
+        <el-input v-model="channelId" style="width:180px;" placeholder="请输入内容"></el-input> -->
         <em @click="getList" class="btn">查询</em>
       </div>
     </div>
@@ -17,17 +17,17 @@
             <span>{{ scope.row.gmtCreate ? scope.row.gmtCreate.split(' ')[0] : '--' }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="channelId" label="api编号" align="center">
+        <el-table-column prop="apiAccountId" label="api编号" align="center">
         </el-table-column>
-        <el-table-column prop="channelName" label="站点名称" align="center">
+        <el-table-column prop="apiAccountName" label="站点名称" align="center">
         </el-table-column>
         <el-table-column prop="orderNum" label="订单数" align="center">
         </el-table-column>
         <el-table-column prop="sellerAccountMoney" label="用户帐户余额" align="center">
         </el-table-column>
-        <el-table-column prop="sellerCost" label="用户消费余额" align="center">
+        <el-table-column prop="sellerCost" label="用户消费金额" align="center">
         </el-table-column>
-        <el-table-column prop="sellerCost" label="利润" align="center">
+        <el-table-column prop="profit" label="利润" align="center">
         </el-table-column>
       </el-table>
     </div>
@@ -45,7 +45,7 @@ export default {
   data () {
     return {
       searchTime: '',
-      apiUrl: '/api/statistics/search/getChannelStatisticsByCondition',
+      apiUrl: '/api/apiAccount/getStatisticList',
       channelId: '',
       time: '',
       currentPage: 1,
@@ -57,9 +57,8 @@ export default {
       return {
         startTime: this.time[0],
         endTime: this.time[1],
-        channelId: this.channelId,
-        currPageNo: this.pageNo,
-        limit: this.pageSize
+        pageNo: this.pageNo,
+        pageSize: this.pageSize
       }
     }
   },
