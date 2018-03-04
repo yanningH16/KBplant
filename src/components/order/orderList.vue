@@ -366,7 +366,19 @@ export default {
       }).catch(() => {
         this.$message.error('服务器错误！')
       })
+    },
+    initTime () {
+      let time = new Date()
+      let year = time.getFullYear()
+      let month = time.getMonth() + 1 <= 9 ? '0' + (time.getMonth() + 1) : (time.getMonth() + 1)
+      let day = time.getDate() <= 9 ? '0' + time.getDate() : time.getDate()
+      let time1 = year + '-' + month + '-' + day + ' 00:00:00'
+      let time2 = year + '-' + month + '-' + day + ' 23:59:59'
+      this.postObj.time = [time1, time2]
     }
+  },
+  created () {
+    this.initTime()
   }
 }
 </script>
