@@ -75,6 +75,8 @@ export default {
           if (data.data.code === '200') {
             this.setUserInfo(data.data.data)
             this.setUserToken(data.headers.accesstoken)
+            localStorage.setItem('__userNamePlat__', this.username)
+            localStorage.setItem('__userPw__', this.password)
             this.$message({
               message: '登录成功,页面跳转中...',
               type: 'success',
@@ -101,6 +103,12 @@ export default {
   },
   mounted () {
     this.getIp()
+    if (localStorage.getItem('__userNamePlat__')) {
+      this.username = localStorage.getItem('__userNamePlat__')
+    }
+    if (localStorage.getItem('__userPw__')) {
+      this.password = localStorage.getItem('__userPw__')
+    }
   }
 }
 </script>

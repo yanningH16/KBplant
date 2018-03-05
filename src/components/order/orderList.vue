@@ -90,7 +90,10 @@
         </li>
         <li style="flex:1;text-align:right;">
           <span @click="sureToReget" class="btn-b" style="text-align:center;margin-right:20px;">重新获取</span>
-          <span @click="sureToLinkOrder" class="btn-b" style="text-align:center;">导出订单</span>
+          <!-- 选择复选框导出方式 -->
+          <!-- <span @click="sureToLinkOrder" class="btn-b" style="text-align:center;">导出订单</span> -->
+          <!-- 根据自己添加编号导出 -->
+          <span @click="showGetOrder" class="btn-b" style="text-align:center;">导出订单</span>
         </li>
       </ul>
     </div>
@@ -181,18 +184,21 @@
         <div class="cont" style="text-align:center;margin-bottom:20px;">
           <span style="display:inline-block;width:60px;text-align:right;">导出方式</span>
           <p style="display:inline-block;width:300px;text-align:left;margin-left:10px;">
-            <el-radio v-model="getOrderListObj.getWay" label="1">订单号</el-radio>
-            <el-radio v-model="getOrderListObj.getWay" label="2">快递单号</el-radio>
+            <el-radio v-model="getOrderListObj.getWay" label="third">订单号</el-radio>
+            <el-radio v-model="getOrderListObj.getWay" label="logistic">快递单号</el-radio>
           </p>
         </div>
         <div class="cont" style="text-align:center;margin-bottom:20px;">
           <span style="display:inline-block;width:60px;text-align:right;">筛选条件</span>
-          <el-input v-model="getOrderListObj.filter" type="textarea" :rows="3" resize="none" style="width:300px;margin-left:10px;vertical-align:top;" placeholder="请输入内容">
+          <el-input v-model="getOrderListObj.filter" type="textarea" :autosize="{minRows: 3, maxRows: 10}" resize="none" style="width:300px;margin-left:10px;vertical-align:top;" placeholder="请输入内容">
           </el-input>
         </div>
         <div class="buttons" style="text-align:center;margin-top:40px;">
-          <span class="btn-b" style="margin-right:10px;" @click="getOrderListObj.show = false">取消</span>
-          <span class="btn" @click="getOrderListObj.show = false">确定</span>
+          <!-- <span class="btn-b" style="margin-right:10px;" @click="getOrderListObj.show = false">取消</span> -->
+          <span v-show="getOrderListObj.isPosting" class="btn" @click="sureToFilterOrder">确定</span>
+          <span v-show="!getOrderListObj.isPosting" class="btn">
+            <em class="el-icon-loading"></em>
+          </span>
         </div>
       </el-dialog>
       <el-dialog title="修改订单" :append-to-body="true" :visible.sync="fixOrderObj.show" width="600px" top="15vh">
@@ -265,7 +271,8 @@ export default {
       },
       getOrderListObj: {
         show: false,
-        getWay: '1',
+        isPosting: true,
+        getWay: 'third',
         filter: ''
       },
       userList: [],
@@ -341,6 +348,24 @@ export default {
         arr.push(m.sellerOrderId)
       }
       window.open('/api/task/downloadSellerOrdersByOrderIds/excel?orderIds=' + JSON.stringify(arr))
+    },
+    // 点击显示导出弹框
+    showGetOrder () {
+      this.getOrderListObj.show = true
+      this.getOrderListObj.isPosting = true
+    },
+    // 确认根据条件导出订单
+    sureToFilterOrder () {
+      let orders = this.getOrderListObj.filter
+      orders = orders.trim()
+      orders = orders.replace(/^\n/, '')
+      orders = orders.replace(/\n$/, '')
+      let res = orders.replace(/\n/g, ',')
+      // 开启菊花
+      this.getOrderListObj.isPosting = false
+      window.open('/api/task/downloadSellerOrdersByCondition/excel?orderIds=' + res + '&type=' + this.getOrderListObj.getWay)
+      this.getOrderListObj.show = false
+      this.getOrderListObj.filter = ''
     },
     // 确认重新获取运单号
     sureToReget () {

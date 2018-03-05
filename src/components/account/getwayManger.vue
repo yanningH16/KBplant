@@ -12,7 +12,7 @@
     </div>
     <div class="table">
       <el-table :data="tableData" style="width: 100%">
-        <el-table-column prop="channelId" label="渠道ID" align="center" width="185">
+        <el-table-column prop="channelId" label="渠道ID" align="center">
         </el-table-column>
         <el-table-column prop="name" label="渠道名称" align="center">
         </el-table-column>
@@ -295,68 +295,82 @@ export default {
     },
     // 确认充值
     sureToRecharge () {
-      this.rechargeIsPosting = false // 开启菊花
-      this.$ajax.post('/api/channel/recharge/addMoneyToChannelFund', {
-        money: this.rechargeObj.money,
-        comment: this.rechargeObj.common,
-        channelId: this.rechargeObj.row.channelId,
-        operateUserId: this.userInfo.platformAccountId
-      }).then((data) => {
-        if (data.data.code === '200') {
-          this.rechargeObj.show = false
-          this.$message({
-            message: '操作成功!',
-            type: 'success'
-          })
-          this.getList()
-          for (let m in this.rechargeObj) {
-            if (!(m === 'show')) {
-              this.rechargeObj[m] = ''
+      if (this.rechargeObj.money === '' || this.rechargeObj.common === '') {
+        this.$message({
+          message: '请完善内容!',
+          type: 'warning'
+        })
+      } else {
+        this.rechargeIsPosting = false // 开启菊花
+        this.$ajax.post('/api/channel/recharge/addMoneyToChannelFund', {
+          money: this.rechargeObj.money,
+          comment: this.rechargeObj.common,
+          channelId: this.rechargeObj.row.channelId,
+          operateUserId: this.userInfo.platformAccountId
+        }).then((data) => {
+          if (data.data.code === '200') {
+            this.rechargeObj.show = false
+            this.$message({
+              message: '操作成功!',
+              type: 'success'
+            })
+            this.getList()
+            for (let m in this.rechargeObj) {
+              if (!(m === 'show')) {
+                this.rechargeObj[m] = ''
+              }
             }
+            this.rechargeIsPosting = true // 关闭菊花
+          } else {
+            this.$message({
+              message: data.data.message,
+              type: 'warning'
+            })
           }
-          this.rechargeIsPosting = true // 关闭菊花
-        } else {
-          this.$message({
-            message: data.data.message,
-            type: 'warning'
-          })
-        }
-      }).catch((err) => {
-        console.error(err)
-      })
+        }).catch((err) => {
+          console.error(err)
+        })
+      }
     },
     // 确认扣除金额
     sureToDele () {
-      this.reduceIsPosting = false // 开启菊花
-      this.$ajax.post('/api/channel/recharge/reduceMoneyFromChannelFund', {
-        money: this.deleMoneyObj.money,
-        comment: this.deleMoneyObj.common,
-        channelId: this.deleMoneyObj.row.channelId,
-        operateUserId: this.userInfo.platformAccountId
-      }).then((data) => {
-        if (data.data.code === '200') {
-          this.deleMoneyObj.show = false
-          this.getList()
-          this.$message({
-            message: '操作成功!',
-            type: 'success'
-          })
-          for (let m in this.deleMoneyObj) {
-            if (!(m === 'show')) {
-              this.deleMoneyObj[m] = ''
+      if (this.deleMoneyObj.money === '' || this.deleMoneyObj.common === '') {
+        this.$message({
+          message: '请完善内容!',
+          type: 'warning'
+        })
+      } else {
+        this.reduceIsPosting = false // 开启菊花
+        this.$ajax.post('/api/channel/recharge/reduceMoneyFromChannelFund', {
+          money: this.deleMoneyObj.money,
+          comment: this.deleMoneyObj.common,
+          channelId: this.deleMoneyObj.row.channelId,
+          operateUserId: this.userInfo.platformAccountId
+        }).then((data) => {
+          if (data.data.code === '200') {
+            this.deleMoneyObj.show = false
+            this.getList()
+            this.$message({
+              message: '操作成功!',
+              type: 'success'
+            })
+            for (let m in this.deleMoneyObj) {
+              if (!(m === 'show')) {
+                this.deleMoneyObj[m] = ''
+              }
             }
+            this.reduceIsPosting = true // 关闭菊花
+          } else {
+            this.$message({
+              message: data.data.message,
+              type: 'warning'
+            })
           }
-          this.reduceIsPosting = true // 关闭菊花
-        } else {
-          this.$message({
-            message: data.data.message,
-            type: 'warning'
-          })
-        }
-      }).catch((err) => {
-        console.error(err)
-        this.$message.error('服务器错误！')
-      })
+        }).catch((err) => {
+          console.error(err)
+          this.$message.error('服务器错误！')
+        })
+      }
     },
     // 点击确认按钮
     sureToPost () {
