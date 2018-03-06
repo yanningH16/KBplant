@@ -93,17 +93,17 @@
         </el-table-column>
         <el-table-column fixed="left" prop="apiAccountId" label="api编号" align="center" width="110">
         </el-table-column>
-        <el-table-column prop="apiTaskId" label="api任务ID" align="center" width="110">
+        <el-table-column prop="apiAccountName" label="api用户名" align="center" width="110">
         </el-table-column>
         <el-table-column prop="cellPhone" label="联系人姓名" align="center" width="185">
         </el-table-column>
         <!-- <el-table-column prop="userName" label="用户名" align="center" width="120">
         </el-table-column> -->
-        <el-table-column prop="platformType" label="快递公司" align="center" width="120">
+        <!-- <el-table-column prop="platformType" label="快递公司" align="center" width="120">
           <template slot-scope="scope">
             <span>圆通</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column prop="platformType" label="平台" align="center" width="120">
           <template slot-scope="scope">
             <span>{{ scope.row.platformType == 1 ? '淘宝' : scope.row.platformType == 2 ? '天猫' :scope.row.platformType == 3 ? '京东' :scope.row.platformType == 4 ? '拼多多' : '--' }}</span>
@@ -127,7 +127,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="userName" label="订单信息" align="center" width="230">
+        <el-table-column prop="userName" label="订单信息" align="center">
           <template slot-scope="scope">
             <div style="text-align:left;font-size:12px;">
               <p>平台订单号: {{ scope.row.orderId || '--' }}</p>
@@ -372,7 +372,19 @@ export default {
       }).catch(() => {
         this.$message.error('服务器错误！')
       })
+    },
+    initTime () {
+      let time = new Date()
+      let year = time.getFullYear()
+      let month = time.getMonth() + 1 <= 9 ? '0' + (time.getMonth() + 1) : (time.getMonth() + 1)
+      let day = time.getDate() <= 9 ? '0' + time.getDate() : time.getDate()
+      let time1 = year + '-' + month + '-' + day + ' 00:00:00'
+      let time2 = year + '-' + month + '-' + day + ' 23:59:59'
+      this.postObj.time = [time1, time2]
     }
+  },
+  created () {
+    this.initTime()
   }
 }
 </script>

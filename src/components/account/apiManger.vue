@@ -126,34 +126,41 @@ export default {
     },
     // 确认充值
     sureToRecharge () {
-      this.isPoting = false
-      this.$ajax.post('/apiapiAccount/recharge', {
-        money: this.rechargeObj.money,
-        comment: this.rechargeObj.common,
-        apiAccountId: this.apiAccountId
-      }).then((data) => {
-        if (data.data.code === '200') {
-          this.rechargeObj.show = false
-          this.$message({
-            message: '操作成功!',
-            type: 'success'
-          })
-          this.getList()
-          this.isPoting = true
-          for (let m in this.rechargeObj) {
-            if (!(m === 'show')) {
-              this.rechargeObj[m] = ''
+      if (this.rechargeObj.money === '' || this.rechargeObj.common === '') {
+        this.$message({
+          message: '请填写充值信息!',
+          type: 'warning'
+        })
+      } else {
+        this.isPoting = false
+        this.$ajax.post('/apiapiAccount/recharge', {
+          money: this.rechargeObj.money,
+          comment: this.rechargeObj.common,
+          apiAccountId: this.apiAccountId
+        }).then((data) => {
+          if (data.data.code === '200') {
+            this.rechargeObj.show = false
+            this.$message({
+              message: '操作成功!',
+              type: 'success'
+            })
+            this.getList()
+            this.isPoting = true
+            for (let m in this.rechargeObj) {
+              if (!(m === 'show')) {
+                this.rechargeObj[m] = ''
+              }
             }
+          } else {
+            this.$message({
+              message: data.data.message,
+              type: 'warning'
+            })
           }
-        } else {
-          this.$message({
-            message: data.data.message,
-            type: 'warning'
-          })
-        }
-      }).catch((err) => {
-        console.error(err)
-      })
+        }).catch((err) => {
+          console.error(err)
+        })
+      }
     }
   }
 }

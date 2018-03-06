@@ -38,7 +38,7 @@
         </el-table-column>
         <el-table-column prop="sellerAccountMoney" label="用户帐户余额" align="center" width="120">
         </el-table-column>
-        <el-table-column prop="sellerCost" label="用户消费金额" align="center" width="120">
+        <el-table-column prop="sellerCost" label="用户消费金额" align="center">
         </el-table-column>
       </el-table>
     </div>
