@@ -25,6 +25,10 @@
           </template>
         </el-table-column> -->
         <el-table-column prop="money" label="充值金额" align="center">
+          <template slot-scope="scope">
+            <span v-if="scope.row.instruction==='减钱'">-{{ scope.row.money }}</span>
+            <span v-else>{{ scope.row.money }}</span>
+          </template>
         </el-table-column>
         <el-table-column prop="address" label="充值前金额" align="center">
           <template slot-scope="scope">
