@@ -133,7 +133,7 @@ export default {
         })
       } else {
         this.isPoting = false
-        this.$ajax.post('/apiapiAccount/recharge', {
+        this.$ajax.post('/api/apiAccount/recharge', {
           money: this.rechargeObj.money,
           comment: this.rechargeObj.common,
           apiAccountId: this.apiAccountId
