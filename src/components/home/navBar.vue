@@ -1,8 +1,8 @@
 <template>
   <div class="menu">
     <div class="logo">
-      <!-- <img src="../../assets/images/ico.png" alt="logo"> -->
-      <span>后台管理系统</span>
+      <img src="../../assets/images/ico.png" alt="logo">
+      <span>项目管理系统</span>
     </div>
     <div class="router">
       <div class="routerBox" v-for="(item,index) in menus" :key="index" ref="routerBox">
@@ -43,24 +43,32 @@ export default {
         return [
           {
             icon: 'icon-yingxiaoduanxin',
-            header: '帐号管理',
+            header: '首页',
+            router: 'header'
+          },
+          {
+            icon: 'icon-yingxiaoduanxin',
+            header: '项目管理',
             router: 'account',
             children: [
               {
-                header: '用户管理',
+                header: '项目信息',
                 router: 'userManger'
               }, {
-                header: '渠道管理',
+                header: '参建单位',
                 router: 'getwayManger'
               }, {
-                header: '分站管理',
+                header: '标段信息',
                 router: 'stationManger'
               }, {
-                header: 'api管理',
+                header: '用户管理',
                 router: 'apiManger'
               }, {
-                header: '推荐人管理',
+                header: '项目流程配置',
                 router: 'pushManger'
+              }, {
+                header: '基础参数配置',
+                router: 'last'
               }
             ]
           },

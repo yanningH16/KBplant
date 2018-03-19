@@ -116,13 +116,13 @@ export default {
   background #E8EBF0
   position relative
   .left
-    flex 0 0 180px
+    flex 0 0 230px
     background #19223D
   .wrap
     position absolute
     top 0px
     left 0
-    width 180px
+    width 230px
     height 100%
     background rgba(0, 0, 0, 0)
   .right

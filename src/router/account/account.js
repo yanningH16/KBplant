@@ -10,6 +10,8 @@ const stationManger = () =>
   import(/* webpackChunkName: "stationManger" */ '@/components/account/stationManger')
 const apiManger = () =>
   import(/* webpackChunkName: "apiManger" */ '@/components/account/apiManger')
+const Last = () =>
+  import(/* webpackChunkName: "apiManger" */ '@/components/account/last')
 const account = [
   {
     path: 'account/userManger',
@@ -46,6 +48,12 @@ const account = [
     component: apiManger,
     name: 'apiManger',
     meta: { title: 'api管理' }
+  },
+  {
+    path: 'account/last',
+    component: Last,
+    name: 'last',
+    meta: { title: '基础参数配置' }
   }
 ]
 

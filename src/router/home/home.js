@@ -3,6 +3,7 @@ import order from '../order/order'
 import money from '../money/money'
 import countList from '../countList/countList'
 import other from '../other/other'
+import header from '../header/header'
 const Home = (resolve) => {
   import('@/components/home/home').then((module) => {
     resolve(module)
@@ -18,6 +19,6 @@ const home = [{
   path: '/',
   component: Home,
   name: 'home',
-  children: [...defaultHome, ...account, ...order, ...money, ...countList, ...other]
+  children: [...defaultHome, ...account, ...order, ...money, ...countList, ...other, ...header]
 }]
 export default home
